@@ -452,20 +452,19 @@ function cwbcc_cw_update_exchange_data( $results ) {
 }
 
 
-/* ToDo:
-
- * Add currency to blockcypher currencies
+/*
+ * Add currency to currencies array
  *
  * @param $currencies
  *
  * @return array
- *
+ **/
 function cwbcc_add_currency_to_array( $currencies ) {
 	$currencies[] = 'BCC';
 
 	return $currencies;
 }
-*/
+
 
 
 /**
@@ -478,6 +477,8 @@ function cwbcc_add_currency_to_array( $currencies ) {
  */
 function cwbcc_get_currency_params( $currency_params, $field_id ) {
 	if ( strcmp( $field_id, 'cryptowoo_bcc_mpk' ) === 0 ) {
+		$currency_params = new stdClass();
+		$currency_params->strlen = 111;
         $currency_params->mand_mpk_prefix    = 'xpub';   // bip32.org & Electrum prefix
         $currency_params->mand_base58_prefix = '0488b21e'; // Bitcoin Cash
         $currency_params->currency           = 'BCC';
