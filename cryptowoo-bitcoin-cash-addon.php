@@ -114,6 +114,7 @@ if ( cwbcc_hd_enabled() ) {
 	// Currency params
 	add_filter( 'cw_get_currency_params', 'cwbcc_get_currency_params', 10, 2 );
 	add_filter( 'cw_sort_unpaid_addresses', 'cwbcc_sort_unpaid_addresses', 10, 2 );
+	add_filter( 'cw_prioritize_unpaid_addresses', 'cwbcc_prioritize_unpaid_addresses', 10, 2);
 
 	// Add discovery button to currency option
 	//add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
@@ -510,6 +511,27 @@ function cwbcc_sort_unpaid_addresses($unpaid_addresses, $unpaid_addresses_raw ) 
 			$unpaid_addresses = array_merge($unpaid_addresses, $batch);
 		}
 	}
+
+	return $unpaid_addresses;
+}
+
+/**
+ * Override prioritize unpaid addresses to add BCC
+ *
+ * @param array $unpaid_addresses
+ * @param array $unpaid_addresses_raw
+ * @param int $number
+ *
+ * @return array
+ */
+function cwbcc_prioritize_unpaid_addresses($unpaid_addresses, $unpaid_addresses_raw) {
+    // Order the items according to their currencies' average blocktime
+    foreach ($unpaid_addresses_raw as $address) {
+        $payment_currency = $address->payment_currency;
+        if (strcmp($payment_currency, 'BCC') == 0) {
+            $unpaid_addresses = array_merge($unpaid_addresses, [$address]);
+        }
+    }
 
 	return $unpaid_addresses;
 }
