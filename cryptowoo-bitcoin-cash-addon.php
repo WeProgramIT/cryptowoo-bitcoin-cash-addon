@@ -210,6 +210,7 @@ function cwbcc_add_coin_identifier( $coin_identifiers ) {
  */
 function cwbcc_address_prefixes( $prefixes ) {
 	$prefixes['BCC'] = '00';
+	$prefixes['BCC_MULTISIG'] = '05';
 
 	return $prefixes;
 }
