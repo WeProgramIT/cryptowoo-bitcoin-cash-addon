@@ -113,6 +113,7 @@ if ( cwbcc_hd_enabled() ) {
 
 	// Currency params
 	add_filter( 'cw_get_currency_params', 'cwbcc_get_currency_params', 10, 2 );
+	add_filter( 'cw_sort_unpaid_addresses', 'cwbcc_sort_unpaid_addresses', 10, 2 );
 
 	// Add discovery button to currency option
 	//add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
@@ -488,6 +489,30 @@ function cwbcc_get_currency_params( $currency_params, $field_id ) {
 	return $currency_params;
 }
 
+/**
+ * Override sort unpaid addresses to add BCC
+ *
+ * @param array $unpaid_addresses
+ * @param array $unpaid_addresses_raw
+ *
+ * @return array
+ */
+function cwbcc_sort_unpaid_addresses($unpaid_addresses, $unpaid_addresses_raw ) {
+	$address_batch = array();
+
+	// Order the items according to their currencies' average blocktime
+	foreach ($unpaid_addresses_raw as $address) {
+		$payment_currency = $address->payment_currency;
+		if (strcmp($payment_currency, 'BCC') == 0) {
+			$top_n[0]['BCC'][]      = $address;
+			$address_batch['BCC'][] = $address->address;
+			$batch = array_merge(array('batches' => $address_batch), $top_n[0]);
+			$unpaid_addresses = array_merge($unpaid_addresses, $batch);
+		}
+	}
+
+	return $unpaid_addresses;
+}
 
 /**
  * Fallback on failing API
