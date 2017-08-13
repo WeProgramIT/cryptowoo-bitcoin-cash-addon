@@ -142,7 +142,14 @@ if ( cwbcc_hd_enabled() ) {
  * see cryptowoo/assets/fonts/aw-cryptocoins/cryptocoins-colors.css
  */
 function cwbcc_coin_icon_color( ) { ?>
-	<style type="text/css">.cc-BCC, .cc-BCC-alt { color: #1c75bc; }</style>
+	<style type="text/css">
+		i.cc.BCC:before, i.cc.BCC-alt:before {
+			content: "\e9a6";
+		}
+		i.cc.BCC, i.cc.BCC-alt {
+			color: #F7931A;
+		}
+	</style>
 <?php }
 add_action('wp_head', 'cwbcc_coin_icon_color');
 
