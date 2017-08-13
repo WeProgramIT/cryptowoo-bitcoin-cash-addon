@@ -119,7 +119,7 @@ if ( cwbcc_hd_enabled() ) {
 	// Add discovery button to currency option
 	//add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
 	add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
-	add_filter( 'cw_cron_update_altcoin_fiat_rates', 'cwbcc_cw_update_exchange_data', 10, 1 );
+	add_filter( 'cw_cron_update_altcoin_fiat_rates', 'cwbcc_cw_update_exchange_data', 10, 2 );
 
 	// Catch failing processing API (only if processing_fallback is enabled)
 	add_filter( 'cw_get_tx_api_config', 'cwbcc_cw_get_tx_api_config', 10, 3 );
