@@ -824,6 +824,7 @@ function cwbcc_add_fields() {
 		'desc'              => sprintf( __( 'Cross-calculated via BTC/%s', 'cryptowoo' ), $woocommerce_currency ),
 		'options'           => array(
 			'bittrex'    => 'Bittrex',
+			'poloniex'    => 'Poloniex',
 			'shapeshift' => 'ShapeShift'
 		),
 		'default'           => 'poloniex',
