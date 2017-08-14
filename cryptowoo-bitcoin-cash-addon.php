@@ -162,7 +162,7 @@ add_action('wp_head', 'cwbcc_coin_icon_color');
  * @return mixed
  */
 function cwbcc_cryptowoo_misconfig_notice( $enabled, $options ) {
-	$enabled['BCC'] = $options['processing_api_bcc'] === 'disabled' && ( (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options ) || (bool) CW_Validate::check_if_unset( DELETE, $options ) );
+	$enabled['BCC'] = $options['processing_api_bcc'] === 'disabled' && ( (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options ) || (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options ) );
 
 	return $enabled;
 }
@@ -240,7 +240,7 @@ function cwbcc_wallet_config( $wallet_config, $currency, $options ) {
 			'multiplier'    => (float) $options['multiplier_bcc'],
 			'safe_address'  => false,
 			'decimals'      => 8,
-			'mpk_key'       => ! CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false ) ? DELETE : 'cryptowoo_bcc_mpk',
+			'mpk_key'       => ! CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false ) ? 'cryptowoo_bcc_mpk' : 'cryptowoo_bcc_mpk',
 			'fwd_addr_key'  => 'safe_bcc_address',
 			'threshold_key' => 'forwarding_threshold_bcc'
 		);
@@ -344,8 +344,8 @@ function cwbcc_validate_custom_api_currency( $currency, $field_id ) {
  * @return array
  */
 function cwbcc_cryptowoo_is_ready( $enabled, $options, $changed_values ) {
-	$enabled['BCC']           = (bool) CW_Validate::check_if_unset( DELETE, $options, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false );
-	$enabled['BCC_transient'] = (bool) CW_Validate::check_if_unset( DELETE, $changed_values, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $changed_values, false );
+	$enabled['BCC']           = (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false );
+	$enabled['BCC_transient'] = (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $changed_values, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $changed_values, false );
 
 	return $enabled;
 }
@@ -401,7 +401,7 @@ function cwbcc_index_key_ids( $index_key_ids ) {
  * @return array
  */
 function cwbcc_mpk_key_ids( $mpk_key_ids ) {
-	$mpk_key_ids['BCC'] = DELETE;
+	$mpk_key_ids['BCC'] = 'cryptowoo_bcc_mpk';
 	$mpk_key_ids['BCC_E'] = 'cryptowoo_bcc_mpk';
 
 	return $mpk_key_ids;
@@ -948,7 +948,7 @@ function cwbcc_add_fields() {
 		'title'             => sprintf( __( '%sprefix%s', 'cryptowoo-hd-wallet-addon' ), '<b>BCC "xpub..." ', '</b>' ),
 		'desc'              => sprintf(__('Remove this key to use the %s prefix format.', 'cryptowoo-hd-wallet-addon'), 'drkv'),
 		'validate_callback' => 'redux_validate_mpk',
-		//'required' => array(DELETE, 'equals', ''),
+		//'required' => array('cryptowoo_bcc_mpk', 'equals', ''),
 		'placeholder'       => 'xpub...',
 		// xpub format
 		'text_hint'         => array(
