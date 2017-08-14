@@ -134,6 +134,9 @@ if ( cwbcc_hd_enabled() ) {
 	// Insight API URL
 	add_filter( 'cw_prepare_insight_api', 'cwbcc_override_insight_url', 10, 4 );
 
+	// Add Blockdozer processing
+	add_filter('cw_update_tx_details', 'cwbcc_cw_update_tx_details', 10, 5);
+
 	// Wallet config
 	add_filter( 'wallet_config', 'cwbcc_wallet_config', 10, 3 );
 	add_filter( 'cw_get_processing_config', 'cwbcc_processing_config', 10, 3 );
@@ -303,6 +306,27 @@ function cwbcc_link_to_address( $url, $address, $currency, $options ) {
 	}
 
 	return $url;
+}
+
+/**
+ * Do blockdozer insight api processing if chosen
+ *
+ * @param $batch_data
+ * @param $batch_currency
+ * @param $orders
+ * @param $processing
+ * @param $options
+ *
+ * @return string
+ */
+function cwbcc_cw_update_tx_details( $batch_data, $batch_currency, $orders, $processing, $options ) {
+	if ($batch_currency == "BCC" && $options['processing_api_bcc'] == "blockdozer") {
+		$options['custom_api_bcc'] = "http://blockdozer.com/insight-api/";
+		$batch = [0 => $orders[0]->address];
+		$batch_data[$batch_currency] = CW_Insight::insight_batch_tx_update($batch_currency, $batch, $orders, $options);
+		usleep(333333); // Max ~3 requests/second TODO remove when we have proper rate limiting
+	}
+	return $batch_data;
 }
 
 
