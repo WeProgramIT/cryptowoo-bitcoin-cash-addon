@@ -117,9 +117,12 @@ if ( cwbcc_hd_enabled() ) {
 	add_filter( 'cw_prioritize_unpaid_addresses', 'cwbcc_prioritize_unpaid_addresses', 10, 2);
 
 	// Add discovery button to currency option
-	//add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
-	add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
-	add_filter( 'cw_cron_update_altcoin_fiat_rates', 'cwbcc_cw_update_exchange_data', 10, 2 );
+	//add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk', 'hd_wallet_discovery_button' );
+	add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk', 'hd_wallet_discovery_button' );
+
+	// Exchange rates
+	add_filter( 'cw_force_update_exchange_rates', 'cwbcc_force_update_exchange_rates', 10, 2 );
+	add_filter( 'cw_cron_update_exchange_data', 'cwbcc_cron_update_exchange_data', 10, 2 );
 
 	// Catch failing processing API (only if processing_fallback is enabled)
 	add_filter( 'cw_get_tx_api_config', 'cwbcc_cw_get_tx_api_config', 10, 3 );
@@ -447,6 +450,18 @@ function cwbcc_get_mpk_data_network( $mpk_data, $currency, $options ) {
 	return $mpk_data;
 }
 
+/**
+ * Add currency force exchange rate update button
+ *
+ * @param $results
+ *
+ * @return array
+ */
+function cwbcc_force_update_exchange_rates( $results ) {
+	$results['bcc'] = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCC', false, true );
+
+	return $results;
+}
 
 /**
  * Add currency to background exchange rate update
@@ -456,7 +471,7 @@ function cwbcc_get_mpk_data_network( $mpk_data, $currency, $options ) {
  *
  * @return array
  */
-function cwbcc_cw_update_exchange_data($data, $options) {
+function cwbcc_cron_update_exchange_data($data, $options) {
 	$bcc = CW_ExchangeRates::update_altcoin_fiat_rates('BCC', $options);
 
 	// Maybe log exchange rate updates
@@ -470,14 +485,13 @@ function cwbcc_cw_update_exchange_data($data, $options) {
 	return $data;
 }
 
-
-/*
+/**
  * Add currency to currencies array
  *
  * @param $currencies
  *
  * @return array
- **/
+ */
 function cwbcc_add_currency_to_array( $currencies ) {
 	$currencies[] = 'BCC';
 
