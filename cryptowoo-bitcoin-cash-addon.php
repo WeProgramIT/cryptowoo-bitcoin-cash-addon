@@ -113,13 +113,20 @@ if ( cwbcc_hd_enabled() ) {
 
 	// Currency params
 	add_filter( 'cw_get_currency_params', 'cwbcc_get_currency_params', 10, 2 );
-	add_filter( 'cw_sort_unpaid_addresses', 'cwbcc_sort_unpaid_addresses', 10, 2 );
+
+	// Order sorting and prioritizing
+	add_filter( 'cw_sort_unpaid_addresses', 'cwbcc_sort_unpaid_addresses', 10, 2);
 	add_filter( 'cw_prioritize_unpaid_addresses', 'cwbcc_prioritize_unpaid_addresses', 10, 2);
+	add_filter( 'cw_filter_batch', 'cwbcc_filter_batch', 10, 2);
 
 	// Add discovery button to currency option
-	//add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
-	add_filter( "redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk", 'hd_wallet_discovery_button' );
-	add_filter( 'cw_cron_update_altcoin_fiat_rates', 'cwbcc_cw_update_exchange_data', 10, 2 );
+	//add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk', 'hd_wallet_discovery_button' );
+	add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk', 'hd_wallet_discovery_button' );
+
+	// Exchange rates
+	add_filter( 'cw_force_update_exchange_rates', 'cwbcc_force_update_exchange_rates', 10, 2 );
+	add_filter( 'cw_cron_update_exchange_data', 'cwbcc_cron_update_exchange_data', 10, 2 );
+	add_filter( 'cw_get_poloniex_price_coin', 'cwbcc_get_poloniex_price_coin', 10, 1);
 
 	// Catch failing processing API (only if processing_fallback is enabled)
 	add_filter( 'cw_get_tx_api_config', 'cwbcc_cw_get_tx_api_config', 10, 3 );
@@ -447,6 +454,18 @@ function cwbcc_get_mpk_data_network( $mpk_data, $currency, $options ) {
 	return $mpk_data;
 }
 
+/**
+ * Add currency force exchange rate update button
+ *
+ * @param $results
+ *
+ * @return array
+ */
+function cwbcc_force_update_exchange_rates( $results ) {
+	$results['bcc'] = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCC', false, true );
+
+	return $results;
+}
 
 /**
  * Add currency to background exchange rate update
@@ -456,7 +475,7 @@ function cwbcc_get_mpk_data_network( $mpk_data, $currency, $options ) {
  *
  * @return array
  */
-function cwbcc_cw_update_exchange_data($data, $options) {
+function cwbcc_cron_update_exchange_data($data, $options) {
 	$bcc = CW_ExchangeRates::update_altcoin_fiat_rates('BCC', $options);
 
 	// Maybe log exchange rate updates
@@ -470,14 +489,27 @@ function cwbcc_cw_update_exchange_data($data, $options) {
 	return $data;
 }
 
+/**
+ * Override Poloniex coin name (BCH instead of BCC)
+ *
+ * @param $currency
+ *
+ * @return string
+ */
+function cwbcc_get_poloniex_price_coin($currency) {
+    if($currency === 'BCC') {
+        $currency = 'BCH';
+    }
+    return $currency;
+}
 
-/*
+/**
  * Add currency to currencies array
  *
  * @param $currencies
  *
  * @return array
- **/
+ */
 function cwbcc_add_currency_to_array( $currencies ) {
 	$currencies[] = 'BCC';
 
@@ -508,50 +540,50 @@ function cwbcc_get_currency_params( $currency_params, $field_id ) {
 }
 
 /**
- * Override sort unpaid addresses to add BCC
+ * Add BCC addresses to sort unpaid addresses
  *
- * @param array $unpaid_addresses
- * @param array $unpaid_addresses_raw
+ * @param array $top_n
+ * @param mixed $address
  *
  * @return array
  */
-function cwbcc_sort_unpaid_addresses($unpaid_addresses, $unpaid_addresses_raw ) {
-	$address_batch = array();
-
-	// Order the items according to their currencies' average blocktime
-	foreach ($unpaid_addresses_raw as $address) {
-		$payment_currency = $address->payment_currency;
-		if (strcmp($payment_currency, 'BCC') == 0) {
-			$top_n[0]['BCC'][]      = $address;
-			$address_batch['BCC'][] = $address->address;
-			$batch = array_merge(array('batches' => $address_batch), $top_n[0]);
-			$unpaid_addresses = array_merge($unpaid_addresses, $batch);
-		}
+function cwbcc_sort_unpaid_addresses($top_n, $address) {
+	if (strcmp($address->payment_currency, 'BCC') === 0) {
+		$top_n[3]['BCC'][]      = $address;
 	}
-
-	return $unpaid_addresses;
+	return $top_n;
 }
 
 /**
- * Override prioritize unpaid addresses to add BCC
+ * Add BCC addresses to prioritize unpaid addresses
  *
- * @param array $unpaid_addresses
- * @param array $unpaid_addresses_raw
- * @param int $number
+ * @param array $top_n
+ * @param mixed $address
  *
  * @return array
  */
-function cwbcc_prioritize_unpaid_addresses($unpaid_addresses, $unpaid_addresses_raw) {
-    // Order the items according to their currencies' average blocktime
-    foreach ($unpaid_addresses_raw as $address) {
-        $payment_currency = $address->payment_currency;
-        if (strcmp($payment_currency, 'BCC') == 0) {
-            $unpaid_addresses = array_merge($unpaid_addresses, [$address]);
-        }
-    }
-
-	return $unpaid_addresses;
+function cwbcc_prioritize_unpaid_addresses($top_n, $address) {
+	if (strcmp($address->payment_currency, 'BCC') === 0) {
+		$top_n[3][]      = $address;
+	}
+	return $top_n;
 }
+
+/**
+ * Add BCC addresses to address_batch
+ *
+ * @param array $address_batch
+ * @param mixed $address
+ *
+ * @return array
+ */
+function cwbcc_filter_batch($address_batch, $address) {
+	if (strcmp($address->payment_currency, 'BCC') === 0) {
+		$address_batch['BCC'][] = $address->address;
+	}
+	return $address_batch;
+}
+
 
 /**
  * Fallback on failing API
