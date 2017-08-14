@@ -462,9 +462,9 @@ function cwbcc_cw_update_exchange_data($data, $options) {
 	// Maybe log exchange rate updates
 	if((bool)$options['logging']['rates']) {
 		if($bcc['status'] === 'not updated' || strpos($bcc['status'], 'disabled')) {
-			$data['btc'] = strpos($bcc['status'], 'disabled') ? $bcc['status'] : $bcc['last_update'];
+			$data['bcc'] = strpos($bcc['status'], 'disabled') ? $bcc['status'] : $bcc['last_update'];
 		} else {
-			$data['btc'] = $bcc;
+			$data['bcc'] = $bcc;
 		}
 	}
 	return $data;
