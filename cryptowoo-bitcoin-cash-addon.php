@@ -5,31 +5,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin Name: CryptoWoo Bitcoin Cash Add-on
  * Plugin URI: https://www.cryptowoo.com/shop/cryptowoo-bitcoin-cash-addon
- * Description: Accept BCC payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
+ * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
  * Version: 0.1.0
  * Author: Olsm|OlavOlsm|Keys4Coins
  * Author URI: https://www.keys4coins.com
  * License: GPLv2
- * Text Domain: cryptowoo-bcc-addon
+ * Text Domain: cryptowoo-bch-addon
  * Domain Path: /lang
  *
  */
 
-define( 'CWBCC_VER', '0.1.0' );
-define( 'CWBCC_FILE', __FILE__ );
+define( 'CWBCH_VER', '0.1.0' );
+define( 'CWBCH_FILE', __FILE__ );
 
 // Load the plugin update library if it is not already loaded
 /* ToDo: add license
-if ( ! class_exists( 'CWBCC_License_Menu' ) && file_exists( plugin_dir_path( CWBCC_FILE ) . 'am-license-menu.php' ) ) {
-	require_once( plugin_dir_path( CWBCC_FILE ) . 'am-license-menu.php' );
-	CWBCC_License_Menu::instance( CWBCC_FILE, 'CryptoWoo Bitcoin Cash Addon', CWBCC_VER, 'plugin', 'https://www.cryptowoo.com/' );
+if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( plugin_dir_path( CWBCH_FILE ) . 'am-license-menu.php' ) ) {
+	require_once( plugin_dir_path( CWBCH_FILE ) . 'am-license-menu.php' );
+	CWBCH_License_Menu::instance( CWBCH_FILE, 'CryptoWoo Bitcoin Cash Addon', CWBCH_VER, 'plugin', 'https://www.cryptowoo.com/' );
 }
 */
 
 /**
  * Plugin activation
  */
-function cryptowoo_bcc_addon_activate() {
+function cryptowoo_bch_addon_activate() {
 
 	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
@@ -37,28 +37,28 @@ function cryptowoo_bcc_addon_activate() {
 	if ( ! file_exists( WP_PLUGIN_DIR . '/' . $hd_add_on_file ) || ! file_exists( WP_PLUGIN_DIR . '/cryptowoo/cryptowoo.php' ) ) {
 
 		// If WooCommerce is not installed then show installation notice
-		add_action( 'admin_notices', 'cryptowoo_bcc_notinstalled_notice' );
+		add_action( 'admin_notices', 'cryptowoo_bch_notinstalled_notice' );
 
 		return;
 	} elseif ( ! is_plugin_active( $hd_add_on_file ) ) {
-		add_action( 'admin_notices', 'cryptowoo_bcc_inactive_notice' );
+		add_action( 'admin_notices', 'cryptowoo_bch_inactive_notice' );
 
 		return;
 	}
 }
 
-register_activation_hook( __FILE__, 'cryptowoo_bcc_addon_activate' );
-add_action( 'admin_init', 'cryptowoo_bcc_addon_activate' );
+register_activation_hook( __FILE__, 'cryptowoo_bch_addon_activate' );
+add_action( 'admin_init', 'cryptowoo_bch_addon_activate' );
 
 /**
  * CryptoWoo inactive notice
  */
-function cryptowoo_bcc_inactive_notice() {
+function cryptowoo_bch_inactive_notice() {
 
 	?>
     <div class="error">
         <p><?php _e( '<b>CryptoWoo Bitcoin Cash add-on error!</b><br>It seems like the CryptoWoo HD Wallet add-on has been deactivated.<br>
-       				Please go to the Plugins menu and make sure that the CryptoWoo HD Wallet add-on is activated.', 'cryptowoo-bcc-addon' ); ?></p>
+       				Please go to the Plugins menu and make sure that the CryptoWoo HD Wallet add-on is activated.', 'cryptowoo-bch-addon' ); ?></p>
     </div>
 	<?php
 }
@@ -67,82 +67,82 @@ function cryptowoo_bcc_inactive_notice() {
 /**
  * CryptoWoo HD Wallet add-on not installed notice
  */
-function cryptowoo_bcc_notinstalled_notice() {
+function cryptowoo_bch_notinstalled_notice() {
 	$addon_link = '<a href="https://www.cryptowoo.com/shop/cryptowoo-hd-wallet-addon/" target="_blank">CryptoWoo HD Wallet add-on</a>';
 	?>
     <div class="error">
         <p><?php printf( __( '<b>CryptoWoo Bitcoin Cash add-on error!</b><br>It seems like the CryptoWoo HD Wallet add-on is not installed.<br>
-					The CryptoWoo Bitcoin Cash add-on will only work in combination with the CryptoWoo main plugin and the %s.', 'cryptowoo-bcc-addon' ), $addon_link ); ?></p>
+					The CryptoWoo Bitcoin Cash add-on will only work in combination with the CryptoWoo main plugin and the %s.', 'cryptowoo-bch-addon' ), $addon_link ); ?></p>
     </div>
 	<?php
 }
 
-function cwbcc_hd_enabled() {
+function cwbch_hd_enabled() {
 	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 	return is_plugin_active( 'cryptowoo-hd-wallet-addon/cryptowoo-hd-wallet-addon.php' ) && is_plugin_active( 'cryptowoo/cryptowoo.php' );
 }
 
-if ( cwbcc_hd_enabled() ) {
+if ( cwbch_hd_enabled() ) {
 	// Coin symbol and name
-	add_filter( 'woocommerce_currencies', 'cwbcc_woocommerce_currencies', 10, 1 );
-	add_filter( 'cw_get_currency_symbol', 'cwbcc_get_currency_symbol', 10, 2 );
-	add_filter( 'cw_get_enabled_currencies', 'cwbcc_add_coin_identifier', 10, 1 );
+	add_filter( 'woocommerce_currencies', 'cwbch_woocommerce_currencies', 10, 1 );
+	add_filter( 'cw_get_currency_symbol', 'cwbch_get_currency_symbol', 10, 2 );
+	add_filter( 'cw_get_enabled_currencies', 'cwbch_add_coin_identifier', 10, 1 );
 
 	// BIP32 prefixes
-	add_filter( 'address_prefixes', 'cwbcc_address_prefixes', 10, 1 );
+	add_filter( 'address_prefixes', 'cwbch_address_prefixes', 10, 1 );
 
 	// Custom block explorer URL
-	add_filter( 'cw_link_to_address', 'cwbcc_link_to_address', 10, 4 );
+	add_filter( 'cw_link_to_address', 'cwbch_link_to_address', 10, 4 );
 
 	// Options page validations
-	add_filter( 'validate_custom_api_genesis', 'cwbcc_validate_custom_api_genesis', 10, 2 );
-	add_filter( 'validate_custom_api_currency', 'cwbcc_validate_custom_api_currency', 10, 2 );
-	add_filter( 'cryptowoo_is_ready', 'cwbcc_cryptowoo_is_ready', 10, 3 );
-	add_filter( 'cw_get_shifty_coins', 'cwbcc_cw_get_shifty_coins', 10, 1 );
-	add_filter( 'cw_misconfig_notice', 'cwbcc_cryptowoo_misconfig_notice', 10, 2 );
+	add_filter( 'validate_custom_api_genesis', 'cwbch_validate_custom_api_genesis', 10, 2 );
+	add_filter( 'validate_custom_api_currency', 'cwbch_validate_custom_api_currency', 10, 2 );
+	add_filter( 'cryptowoo_is_ready', 'cwbch_cryptowoo_is_ready', 10, 3 );
+	add_filter( 'cw_get_shifty_coins', 'cwbch_cw_get_shifty_coins', 10, 1 );
+	add_filter( 'cw_misconfig_notice', 'cwbch_cryptowoo_misconfig_notice', 10, 2 );
 
 	// HD wallet management
-	add_filter( 'index_key_ids', 'cwbcc_index_key_ids', 10, 1 );
-	add_filter( 'mpk_key_ids', 'cwbcc_mpk_key_ids', 10, 1 );
-	add_filter( 'get_mpk_data_mpk_key', 'cwbcc_get_mpk_data_mpk_key', 10, 3 );
-	add_filter( 'get_mpk_data_network', 'cwbcc_get_mpk_data_network', 10, 3 );
-	//ToDo: add_filter( 'cw_blockcypher_currencies', 'cwbcc_add_currency_to_array', 10, 1 );
-	add_filter( 'cw_discovery_notice', 'cwbcc_add_currency_to_array', 10, 1 );
-	add_filter( 'cw_discovery_notice_action', 'cwbcc_add_currency_to_array', 10, 1 );
+	add_filter( 'index_key_ids', 'cwbch_index_key_ids', 10, 1 );
+	add_filter( 'mpk_key_ids', 'cwbch_mpk_key_ids', 10, 1 );
+	add_filter( 'get_mpk_data_mpk_key', 'cwbch_get_mpk_data_mpk_key', 10, 3 );
+	add_filter( 'get_mpk_data_network', 'cwbch_get_mpk_data_network', 10, 3 );
+	//ToDo: add_filter( 'cw_blockcypher_currencies', 'cwbch_add_currency_to_array', 10, 1 );
+	add_filter( 'cw_discovery_notice', 'cwbch_add_currency_to_array', 10, 1 );
+	add_filter( 'cw_discovery_notice_action', 'cwbch_add_currency_to_array', 10, 1 );
 
 	// Currency params
-	add_filter( 'cw_get_currency_params', 'cwbcc_get_currency_params', 10, 2 );
+	add_filter( 'cw_get_currency_params', 'cwbch_get_currency_params', 10, 2 );
 
 	// Order sorting and prioritizing
-	add_filter( 'cw_sort_unpaid_addresses', 'cwbcc_sort_unpaid_addresses', 10, 2);
-	add_filter( 'cw_prioritize_unpaid_addresses', 'cwbcc_prioritize_unpaid_addresses', 10, 2);
-	add_filter( 'cw_filter_batch', 'cwbcc_filter_batch', 10, 2);
+	add_filter( 'cw_sort_unpaid_addresses', 'cwbch_sort_unpaid_addresses', 10, 2);
+	add_filter( 'cw_prioritize_unpaid_addresses', 'cwbch_prioritize_unpaid_addresses', 10, 2);
+	add_filter( 'cw_filter_batch', 'cwbch_filter_batch', 10, 2);
 
 	// Add discovery button to currency option
-	//add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk', 'hd_wallet_discovery_button' );
-	add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bcc_mpk', 'hd_wallet_discovery_button' );
+	//add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bch_mpk', 'hd_wallet_discovery_button' );
+	add_filter( 'redux/options/cryptowoo_payments/field/cryptowoo_bch_mpk', 'hd_wallet_discovery_button' );
 
 	// Exchange rates
-	add_filter( 'cw_force_update_exchange_rates', 'cwbcc_force_update_exchange_rates', 10, 2 );
-	add_filter( 'cw_cron_update_exchange_data', 'cwbcc_cron_update_exchange_data', 10, 2 );
-	add_filter( 'cw_get_poloniex_price_coin', 'cwbcc_get_poloniex_price_coin', 10, 1);
+	add_filter( 'cw_force_update_exchange_rates', 'cwbch_force_update_exchange_rates', 10, 2 );
+	add_filter( 'cw_cron_update_exchange_data', 'cwbch_cron_update_exchange_data', 10, 2 );
+	add_filter( 'cw_get_poloniex_price_coin', 'cwbch_get_poloniex_price_coin', 10, 1);
 
 	// Catch failing processing API (only if processing_fallback is enabled)
-	add_filter( 'cw_get_tx_api_config', 'cwbcc_cw_get_tx_api_config', 10, 3 );
+	add_filter( 'cw_get_tx_api_config', 'cwbch_cw_get_tx_api_config', 10, 3 );
 
 	// Insight API URL
-	add_filter( 'cw_prepare_insight_api', 'cwbcc_override_insight_url', 10, 4 );
+	add_filter( 'cw_prepare_insight_api', 'cwbch_override_insight_url', 10, 4 );
 
 	// Add Blockdozer processing
-	add_filter('cw_update_tx_details', 'cwbcc_cw_update_tx_details', 10, 5);
+	add_filter('cw_update_tx_details', 'cwbch_cw_update_tx_details', 10, 5);
 
 	// Wallet config
-	add_filter( 'wallet_config', 'cwbcc_wallet_config', 10, 3 );
-	add_filter( 'cw_get_processing_config', 'cwbcc_processing_config', 10, 3 );
+	add_filter( 'wallet_config', 'cwbch_wallet_config', 10, 3 );
+	add_filter( 'cw_get_processing_config', 'cwbch_processing_config', 10, 3 );
 
 	// Options page
-	add_action( 'plugins_loaded', 'cwbcc_add_fields', 10 );
+	add_action( 'plugins_loaded', 'cwbch_add_fields', 10 );
 
 
 }
@@ -151,17 +151,17 @@ if ( cwbcc_hd_enabled() ) {
  * Bitcoin Cash font color for aw-cryptocoins
  * see cryptowoo/assets/fonts/aw-cryptocoins/cryptocoins-colors.css
  */
-function cwbcc_coin_icon_color( ) { ?>
+function cwbch_coin_icon_color( ) { ?>
 	<style type="text/css">
-		i.cc.BCC:before, i.cc.BCC-alt:before {
+		i.cc.BCH:before, i.cc.BCH-alt:before {
 			content: "\e9a6";
 		}
-		i.cc.BCC, i.cc.BCC-alt {
+		i.cc.BCH, i.cc.BCH-alt {
 			color: #F7931A;
 		}
 	</style>
 <?php }
-add_action('wp_head', 'cwbcc_coin_icon_color');
+add_action('wp_head', 'cwbch_coin_icon_color');
 
 /**
  * Processing API configuration error
@@ -171,8 +171,8 @@ add_action('wp_head', 'cwbcc_coin_icon_color');
  *
  * @return mixed
  */
-function cwbcc_cryptowoo_misconfig_notice( $enabled, $options ) {
-	$enabled['BCC'] = $options['processing_api_bcc'] === 'disabled' && ( (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options ) || (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options ) );
+function cwbch_cryptowoo_misconfig_notice( $enabled, $options ) {
+	$enabled['BCH'] = $options['processing_api_bch'] === 'disabled' && ( (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options ) || (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options ) );
 
 	return $enabled;
 }
@@ -184,8 +184,8 @@ function cwbcc_cryptowoo_misconfig_notice( $enabled, $options ) {
  *
  * @return mixed
  */
-function cwbcc_woocommerce_currencies( $currencies ) {
-	$currencies['BCC'] = __( 'Bitcoin Cash', 'cryptowoo' );
+function cwbch_woocommerce_currencies( $currencies ) {
+	$currencies['BCH'] = __( 'Bitcoin Cash', 'cryptowoo' );
 
 	return $currencies;
 }
@@ -199,8 +199,8 @@ function cwbcc_woocommerce_currencies( $currencies ) {
  *
  * @return string
  */
-function cwbcc_get_currency_symbol( $currency_symbol, $currency ) {
-	return $currency === 'BCC' ? 'BCC' : $currency_symbol;
+function cwbch_get_currency_symbol( $currency_symbol, $currency ) {
+	return $currency === 'BCH' ? 'BCH' : $currency_symbol;
 }
 
 
@@ -211,8 +211,8 @@ function cwbcc_get_currency_symbol( $currency_symbol, $currency ) {
  *
  * @return array
  */
-function cwbcc_add_coin_identifier( $coin_identifiers ) {
-	$coin_identifiers['BCC'] = 'bcc';
+function cwbch_add_coin_identifier( $coin_identifiers ) {
+	$coin_identifiers['BCH'] = 'bch';
 
 	return $coin_identifiers;
 }
@@ -225,9 +225,9 @@ function cwbcc_add_coin_identifier( $coin_identifiers ) {
  *
  * @return array
  */
-function cwbcc_address_prefixes( $prefixes ) {
-	$prefixes['BCC'] = '00';
-	$prefixes['BCC_MULTISIG'] = '05';
+function cwbch_address_prefixes( $prefixes ) {
+	$prefixes['BCH'] = '00';
+	$prefixes['BCH_MULTISIG'] = '05';
 
 	return $prefixes;
 }
@@ -242,20 +242,20 @@ function cwbcc_address_prefixes( $prefixes ) {
  *
  * @return array
  */
-function cwbcc_wallet_config( $wallet_config, $currency, $options ) {
-	if ( $currency === 'BCC' ) {
+function cwbch_wallet_config( $wallet_config, $currency, $options ) {
+	if ( $currency === 'BCH' ) {
 		$wallet_config                       = array(
 			'coin_client'   => 'bitcoincash',
-			'request_coin'  => 'BCC',
-			'multiplier'    => (float) $options['multiplier_bcc'],
+			'request_coin'  => 'BCH',
+			'multiplier'    => (float) $options['multiplier_bch'],
 			'safe_address'  => false,
 			'decimals'      => 8,
-			'mpk_key'       => ! CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false ) ? 'cryptowoo_bcc_mpk' : 'cryptowoo_bcc_mpk',
-			'fwd_addr_key'  => 'safe_bcc_address',
-			'threshold_key' => 'forwarding_threshold_bcc'
+			'mpk_key'       => ! CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options, false ) ? 'cryptowoo_bch_mpk' : 'cryptowoo_bch_mpk',
+			'fwd_addr_key'  => 'safe_bch_address',
+			'threshold_key' => 'forwarding_threshold_bch'
 		);
 		$wallet_config['hdwallet']           = CW_Validate::check_if_unset( $wallet_config['mpk_key'], $options, false );
-		$wallet_config['coin_protocols'][]   = 'bcc';
+		$wallet_config['coin_protocols'][]   = 'bch';
 		$wallet_config['forwarding_enabled'] = false;
 	}
 
@@ -271,13 +271,13 @@ function cwbcc_wallet_config( $wallet_config, $currency, $options ) {
  *
  * @return array
  */
-function cwbcc_processing_config( $pc_conf, $currency, $options ) {
-	if ( $currency === 'BCC' ) {
-		$pc_conf['instant_send']       = isset( $options['bcc_instant_send'] ) ? (bool) $options['bcc_instant_send'] : false;
+function cwbch_processing_config( $pc_conf, $currency, $options ) {
+	if ( $currency === 'BCH' ) {
+		$pc_conf['instant_send']       = isset( $options['bch_instant_send'] ) ? (bool) $options['bch_instant_send'] : false;
 		$pc_conf['instant_send_depth'] = 5; // TODO Maybe add option
 
 		// Maybe accept "raw" zeroconf
-		$pc_conf['min_confidence'] = isset( $options['cryptowoo_bcc_min_conf'] ) && (int) $options['cryptowoo_bcc_min_conf'] === 0 && isset( $options['bcc_raw_zeroconf'] ) && (bool) $options['bcc_raw_zeroconf'] ? 0 : 1;
+		$pc_conf['min_confidence'] = isset( $options['cryptowoo_bch_min_conf'] ) && (int) $options['cryptowoo_bch_min_conf'] === 0 && isset( $options['bch_raw_zeroconf'] ) && (bool) $options['bch_raw_zeroconf'] ? 0 : 1;
 	}
 
 	return $pc_conf;
@@ -294,11 +294,11 @@ function cwbcc_processing_config( $pc_conf, $currency, $options ) {
  *
  * @return string
  */
-function cwbcc_link_to_address( $url, $address, $currency, $options ) {
-	if ( $currency === 'BCC' ) {
+function cwbch_link_to_address( $url, $address, $currency, $options ) {
+	if ( $currency === 'BCH' ) {
 		$url = "http://blockdozer.com/insight/address/{$address}";
-		if ( $options['preferred_block_explorer_bcc'] === 'custom' && isset( $options['custom_block_explorer_bcc'] ) ) {
-			$url = preg_replace( '/{{ADDRESS}}/', $address, $options['custom_block_explorer_bcc'] );
+		if ( $options['preferred_block_explorer_bch'] === 'custom' && isset( $options['custom_block_explorer_bch'] ) ) {
+			$url = preg_replace( '/{{ADDRESS}}/', $address, $options['custom_block_explorer_bch'] );
 			if ( ! wp_http_validate_url( $url ) ) {
 				$url = '#';
 			}
@@ -319,11 +319,11 @@ function cwbcc_link_to_address( $url, $address, $currency, $options ) {
  *
  * @return string
  */
-function cwbcc_cw_update_tx_details( $batch_data, $batch_currency, $orders, $processing, $options ) {
-	if ($batch_currency == "BCC" && $options['processing_api_bcc'] == "blockdozer") {
-		$options['custom_api_bcc'] = "http://blockdozer.com/insight-api/";
+function cwbch_cw_update_tx_details( $batch_data, $batch_currency, $orders, $processing, $options ) {
+	if ($batch_currency == "BCH" && $options['processing_api_bch'] == "blockdozer") {
+		$options['custom_api_bch'] = "http://blockdozer.com/insight-api/";
 		$batch = [0 => $orders[0]->address];
-		$batch_data[$batch_currency] = CW_Insight::insight_batch_tx_update($batch_currency, $batch, $orders, $options);
+		$batch_data[$batch_currency] = CW_Insight::insight_batch_tx_update("BCH", $batch, $orders, $options);
 		usleep(333333); // Max ~3 requests/second TODO remove when we have proper rate limiting
 	}
 	return $batch_data;
@@ -338,8 +338,8 @@ function cwbcc_cw_update_tx_details( $batch_data, $batch_currency, $orders, $pro
  *
  * @return string
  */
-function cwbcc_validate_custom_api_genesis( $genesis, $field_id ) {
-	if ( in_array( $field_id, array( 'custom_api_bcc', 'processing_fallback_url_bcc' ) ) ) {
+function cwbch_validate_custom_api_genesis( $genesis, $field_id ) {
+	if ( in_array( $field_id, array( 'custom_api_bch', 'processing_fallback_url_bch' ) ) ) {
         $genesis = '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f';
         //$genesis  = '00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048'; // 1
 	}
@@ -356,9 +356,9 @@ function cwbcc_validate_custom_api_genesis( $genesis, $field_id ) {
  *
  * @return string
  */
-function cwbcc_validate_custom_api_currency( $currency, $field_id ) {
-	if ( in_array( $field_id, array( 'custom_api_bcc', 'processing_fallback_url_bcc' ) ) ) {
-		$currency = 'BCC';
+function cwbch_validate_custom_api_currency( $currency, $field_id ) {
+	if ( in_array( $field_id, array( 'custom_api_bch', 'processing_fallback_url_bch' ) ) ) {
+		$currency = 'BCH';
 	}
 
 	return $currency;
@@ -374,9 +374,9 @@ function cwbcc_validate_custom_api_currency( $currency, $field_id ) {
  *
  * @return array
  */
-function cwbcc_cryptowoo_is_ready( $enabled, $options, $changed_values ) {
-	$enabled['BCC']           = (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $options, false );
-	$enabled['BCC_transient'] = (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $changed_values, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bcc_mpk', $changed_values, false );
+function cwbch_cryptowoo_is_ready( $enabled, $options, $changed_values ) {
+	$enabled['BCH']           = (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options, false );
+	$enabled['BCH_transient'] = (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $changed_values, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $changed_values, false );
 
 	return $enabled;
 }
@@ -390,11 +390,11 @@ function cwbcc_cryptowoo_is_ready( $enabled, $options, $changed_values ) {
  *
  * @return bool
  */
-function cwbcc_is_cryptostore( $cryptostore, $woocommerce_currency ) {
-	return (bool) $cryptostore ?: $woocommerce_currency === 'BCC';
+function cwbch_is_cryptostore( $cryptostore, $woocommerce_currency ) {
+	return (bool) $cryptostore ?: $woocommerce_currency === 'BCH';
 }
 
-add_filter( 'is_cryptostore', 'cwbcc_is_cryptostore', 10, 2 );
+add_filter( 'is_cryptostore', 'cwbch_is_cryptostore', 10, 2 );
 
 /**
  * Add currency to Shifty button option field
@@ -403,8 +403,8 @@ add_filter( 'is_cryptostore', 'cwbcc_is_cryptostore', 10, 2 );
  *
  * @return array
  */
-function cwbcc_cw_get_shifty_coins( $select ) {
-	$select['BCC'] = sprintf( __( 'Display only on %s payment pages', 'cryptowoo' ), 'Bitcoin Cash' );
+function cwbch_cw_get_shifty_coins( $select ) {
+	$select['BCH'] = sprintf( __( 'Display only on %s payment pages', 'cryptowoo' ), 'Bitcoin Cash' );
 
 	return $select;
 }
@@ -417,8 +417,8 @@ function cwbcc_cw_get_shifty_coins( $select ) {
  *
  * @return array
  */
-function cwbcc_index_key_ids( $index_key_ids ) {
-	$index_key_ids['BCC'] = 'cryptowoo_bcc_index';
+function cwbch_index_key_ids( $index_key_ids ) {
+	$index_key_ids['BCH'] = 'cryptowoo_bch_index';
 
 	return $index_key_ids;
 }
@@ -431,9 +431,9 @@ function cwbcc_index_key_ids( $index_key_ids ) {
  *
  * @return array
  */
-function cwbcc_mpk_key_ids( $mpk_key_ids ) {
-	$mpk_key_ids['BCC'] = 'cryptowoo_bcc_mpk';
-	$mpk_key_ids['BCC_E'] = 'cryptowoo_bcc_mpk';
+function cwbch_mpk_key_ids( $mpk_key_ids ) {
+	$mpk_key_ids['BCH'] = 'cryptowoo_bch_mpk';
+	$mpk_key_ids['BCH_E'] = 'cryptowoo_bch_mpk';
 
 	return $mpk_key_ids;
 }
@@ -448,12 +448,12 @@ function cwbcc_mpk_key_ids( $mpk_key_ids ) {
  *
  * @return string
  */
-function cwbcc_get_mpk_data_mpk_key( $mpk_key, $currency, $options ) {
-	if ( $currency === 'BCC' ) {
-		if ( isset( $options['cryptowoo_bcc_mpk'] ) && $options['cryptowoo_bcc_mpk'] !== '' ) {
-			$mpk_key = "cryptowoo_bcc_mpk";
+function cwbch_get_mpk_data_mpk_key( $mpk_key, $currency, $options ) {
+	if ( $currency === 'BCH' ) {
+		if ( isset( $options['cryptowoo_bch_mpk'] ) && $options['cryptowoo_bch_mpk'] !== '' ) {
+			$mpk_key = "cryptowoo_bch_mpk";
 		} else {
-			$mpk_key = "cryptowoo_bcc_mpk";
+			$mpk_key = "cryptowoo_bch_mpk";
 		}
 	}
 
@@ -470,8 +470,8 @@ function cwbcc_get_mpk_data_mpk_key( $mpk_key, $currency, $options ) {
  *
  * @return object
  */
-function cwbcc_get_mpk_data_network( $mpk_data, $currency, $options ) {
-	if ( $currency === 'BCC' ) {
+function cwbch_get_mpk_data_network( $mpk_data, $currency, $options ) {
+	if ( $currency === 'BCH' ) {
 		$mpk_data->network = BitWasp\Bitcoin\Network\NetworkFactory::bitcoin();
 	}
 
@@ -485,8 +485,8 @@ function cwbcc_get_mpk_data_network( $mpk_data, $currency, $options ) {
  *
  * @return array
  */
-function cwbcc_force_update_exchange_rates( $results ) {
-	$results['bcc'] = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCC', false, true );
+function cwbch_force_update_exchange_rates( $results ) {
+	$results['bch'] = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCH', false, true );
 
 	return $results;
 }
@@ -499,29 +499,29 @@ function cwbcc_force_update_exchange_rates( $results ) {
  *
  * @return array
  */
-function cwbcc_cron_update_exchange_data($data, $options) {
-	$bcc = CW_ExchangeRates::update_altcoin_fiat_rates('BCC', $options);
+function cwbch_cron_update_exchange_data($data, $options) {
+	$bch = CW_ExchangeRates::update_altcoin_fiat_rates('BCH', $options);
 
 	// Maybe log exchange rate updates
 	if((bool)$options['logging']['rates']) {
-		if($bcc['status'] === 'not updated' || strpos($bcc['status'], 'disabled')) {
-			$data['bcc'] = strpos($bcc['status'], 'disabled') ? $bcc['status'] : $bcc['last_update'];
+		if($bch['status'] === 'not updated' || strpos($bch['status'], 'disabled')) {
+			$data['bch'] = strpos($bch['status'], 'disabled') ? $bch['status'] : $bch['last_update'];
 		} else {
-			$data['bcc'] = $bcc;
+			$data['bch'] = $bch;
 		}
 	}
 	return $data;
 }
 
 /**
- * Override Poloniex coin name (BCH instead of BCC)
+ * Override Poloniex coin name (BCH instead of BCH)
  *
  * @param $currency
  *
  * @return string
  */
-function cwbcc_get_poloniex_price_coin($currency) {
-    if($currency === 'BCC') {
+function cwbch_get_poloniex_price_coin($currency) {
+    if($currency === 'BCH') {
         $currency = 'BCH';
     }
     return $currency;
@@ -534,8 +534,8 @@ function cwbcc_get_poloniex_price_coin($currency) {
  *
  * @return array
  */
-function cwbcc_add_currency_to_array( $currencies ) {
-	$currencies[] = 'BCC';
+function cwbch_add_currency_to_array( $currencies ) {
+	$currencies[] = 'BCH';
 
 	return $currencies;
 }
@@ -550,60 +550,60 @@ function cwbcc_add_currency_to_array( $currencies ) {
  *
  * @return object
  */
-function cwbcc_get_currency_params( $currency_params, $field_id ) {
-	if ( strcmp( $field_id, 'cryptowoo_bcc_mpk' ) === 0 ) {
+function cwbch_get_currency_params( $currency_params, $field_id ) {
+	if ( strcmp( $field_id, 'cryptowoo_bch_mpk' ) === 0 ) {
 		$currency_params = new stdClass();
 		$currency_params->strlen = 111;
         $currency_params->mand_mpk_prefix    = 'xpub';   // bip32.org & Electrum prefix
         $currency_params->mand_base58_prefix = '0488b21e'; // Bitcoin Cash
-        $currency_params->currency           = 'BCC';
-        $currency_params->index_key          = 'cryptowoo_bcc_index';
+        $currency_params->currency           = 'BCH';
+        $currency_params->index_key          = 'cryptowoo_bch_index';
 	}
 
 	return $currency_params;
 }
 
 /**
- * Add BCC addresses to sort unpaid addresses
+ * Add BCH addresses to sort unpaid addresses
  *
  * @param array $top_n
  * @param mixed $address
  *
  * @return array
  */
-function cwbcc_sort_unpaid_addresses($top_n, $address) {
-	if (strcmp($address->payment_currency, 'BCC') === 0) {
-		$top_n[3]['BCC'][]      = $address;
+function cwbch_sort_unpaid_addresses($top_n, $address) {
+	if (strcmp($address->payment_currency, 'BCH') === 0) {
+		$top_n[3]['BCH'][]      = $address;
 	}
 	return $top_n;
 }
 
 /**
- * Add BCC addresses to prioritize unpaid addresses
+ * Add BCH addresses to prioritize unpaid addresses
  *
  * @param array $top_n
  * @param mixed $address
  *
  * @return array
  */
-function cwbcc_prioritize_unpaid_addresses($top_n, $address) {
-	if (strcmp($address->payment_currency, 'BCC') === 0) {
+function cwbch_prioritize_unpaid_addresses($top_n, $address) {
+	if (strcmp($address->payment_currency, 'BCH') === 0) {
 		$top_n[3][]      = $address;
 	}
 	return $top_n;
 }
 
 /**
- * Add BCC addresses to address_batch
+ * Add BCH addresses to address_batch
  *
  * @param array $address_batch
  * @param mixed $address
  *
  * @return array
  */
-function cwbcc_filter_batch($address_batch, $address) {
-	if (strcmp($address->payment_currency, 'BCC') === 0) {
-		$address_batch['BCC'][] = $address->address;
+function cwbch_filter_batch($address_batch, $address) {
+	if (strcmp($address->payment_currency, 'BCH') === 0) {
+		$address_batch['BCH'][] = $address->address;
 	}
 	return $address_batch;
 }
@@ -617,9 +617,9 @@ function cwbcc_filter_batch($address_batch, $address) {
  *
  * @return array
  */
-function cwbcc_cw_get_tx_api_config( $api_config, $currency ) {
+function cwbch_cw_get_tx_api_config( $api_config, $currency ) {
     // ToDo: add Blockcypher
-	if ( $currency === 'BCC' ) {
+	if ( $currency === 'BCH' ) {
 		if ( $api_config->tx_update_api === 'blockdozer' ) {
 			$api_config->tx_update_api   = 'insight';
 			$api_config->skip_this_round = false;
@@ -642,9 +642,9 @@ function cwbcc_cw_get_tx_api_config( $api_config, $currency ) {
  *
  * @return mixed
  */
-function cwbcc_override_insight_url( $insight, $endpoint, $currency, $options ) {
-	if ( $currency === 'BCC' && isset( $options['processing_fallback_url_bcc'] ) && wp_http_validate_url( $options['processing_fallback_url_bcc'] ) ) {
-		$fallback_url = $options['processing_fallback_url_bcc'];
+function cwbch_override_insight_url( $insight, $endpoint, $currency, $options ) {
+	if ( $currency === 'BCH' && isset( $options['processing_fallback_url_bch'] ) && wp_http_validate_url( $options['processing_fallback_url_bch'] ) ) {
+		$fallback_url = $options['processing_fallback_url_bch'];
 		$urls         = $endpoint ? CW_Formatting::format_insight_api_url( $fallback_url, $endpoint ) : CW_Formatting::format_insight_api_url( $fallback_url, '' );
 		$insight->url = $urls['surl'];
 	}
@@ -655,7 +655,7 @@ function cwbcc_override_insight_url( $insight, $endpoint, $currency, $options ) 
 /**
  * Add Redux options
  */
-function cwbcc_add_fields() {
+function cwbch_add_fields() {
 	$woocommerce_currency = get_option( 'woocommerce_currency' );
 
 	/*
@@ -663,7 +663,7 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-confirmations',
-		'id'         => 'cryptowoo_bcc_min_conf',
+		'id'         => 'cryptowoo_bch_min_conf',
 		'type'       => 'spinner',
 		'title'      => sprintf( __( '%s Minimum Confirmations', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'       => sprintf( __( 'Minimum number of confirmations for <strong>%s</strong> transactions - %s Confirmation Threshold', 'cryptowoo' ), 'Bitcoin Cash', 'Bitcoin Cash' ),
@@ -677,15 +677,15 @@ function cwbcc_add_fields() {
 	/*
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-confirmations',
-		'id'         => 'bcc_raw_zeroconf',
+		'id'         => 'bch_raw_zeroconf',
 		'type'       => 'switch',
 		'title'      => __( 'Bitcoin Cash "Raw" Zeroconf', 'cryptowoo' ),
 		'subtitle'   => __( 'Accept unconfirmed Bitcoin Cash transactions as soon as they are seen on the network.', 'cryptowoo' ),
 		'desc'       => sprintf( __( '%sThis practice is generally not recommended. Only enable this if you know what you are doing!%s', 'cryptowoo' ), '<strong>', '</strong>' ),
 		'default'    => false,
 		'required'   => array(
-			//array('processing_api_bcc', '=', 'custom'),
-			array( 'cryptowoo_bcc_min_conf', '=', 0 )
+			//array('processing_api_bch', '=', 'custom'),
+			array( 'cryptowoo_bch_min_conf', '=', 0 )
 		),
 	) );
 	*/
@@ -695,11 +695,11 @@ function cwbcc_add_fields() {
 	 * ToDo: Zeroconf order amount threshold
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-zeroconf',
-		'id'         => 'cryptowoo_max_unconfirmed_bcc',
+		'id'         => 'cryptowoo_max_unconfirmed_bch',
 		'type'       => 'slider',
 		'title'      => sprintf( __( '%s zeroconf threshold (%s)', 'cryptowoo' ), 'Bitcoin Cash', $woocommerce_currency ),
 		'desc'       => '',
-		'required'   => array( 'cryptowoo_bcc_min_conf', '<', 1 ),
+		'required'   => array( 'cryptowoo_bch_min_conf', '<', 1 ),
 		'default'    => 100,
 		'min'        => 0,
 		'step'       => 10,
@@ -708,11 +708,11 @@ function cwbcc_add_fields() {
 
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-zeroconf',
-		'id'         => 'cryptowoo_bcc_zconf_notice',
+		'id'         => 'cryptowoo_bch_zconf_notice',
 		'type'       => 'info',
 		'style'      => 'info',
 		'notice'     => false,
-		'required'   => array( 'cryptowoo_bcc_min_conf', '>', 0 ),
+		'required'   => array( 'cryptowoo_bch_min_conf', '>', 0 ),
 		'icon'       => 'fa fa-info-circle',
 		'title'      => sprintf( __( '%s Zeroconf Threshold Disabled', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'       => sprintf( __( 'This option is disabled because you do not accept unconfirmed %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
@@ -729,12 +729,12 @@ function cwbcc_add_fields() {
 	 * /
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'processing-confidence',
-			'id'    => 'bcc_confidence_warning',
+			'id'    => 'bch_confidence_warning',
 			'type'  => 'info',
 			'title' => __('Be careful!', 'cryptowoo'),
 			'style' => 'warning',
 			'desc'  => __('Accepting transactions with a low confidence value increases your exposure to double-spend attacks. Only proceed if you don\'t automatically deliver your products and know what you\'re doing.', 'cryptowoo'),
-			'required' => array('min_confidence_bcc', '<', 95)
+			'required' => array('min_confidence_bch', '<', 95)
 	));
 
 	/*
@@ -743,22 +743,22 @@ function cwbcc_add_fields() {
 
 	Redux::setField( 'cryptowoo_payments', array(
 			'section_id'        => 'processing-confidence',
-			'id'      => 'min_confidence_bcc',
+			'id'      => 'min_confidence_bch',
 			'type'    => 'switch',
 			'title'   => sprintf(__('%s transaction confidence (%s)', 'cryptowoo'), 'Bitcoin Cash', '%'),
 			//'desc'    => '',
-			'required' => array('cryptowoo_bcc_min_conf', '<', 1),
+			'required' => array('cryptowoo_bch_min_conf', '<', 1),
 
 	));
 
 
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-confidence',
-		'id'      => 'min_confidence_bcc_notice',
+		'id'      => 'min_confidence_bch_notice',
 		'type'    => 'info',
 		'style' => 'info',
 		'notice'    => false,
-		'required' => array('cryptowoo_bcc_min_conf', '>', 0),
+		'required' => array('cryptowoo_bch_min_conf', '>', 0),
 		'icon'  => 'fa fa-info-circle',
 		'title'   => sprintf(__('%s "Raw" Zeroconf Disabled', 'cryptowoo'), 'Bitcoin Cash'),
 		'desc'    => sprintf(__('This option is disabled because you do not accept unconfirmed %s payments.', 'cryptowoo'), 'Bitcoin Cash'),
@@ -783,7 +783,7 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'processing-api',
-		'id'                => 'processing_api_bcc',
+		'id'                => 'processing_api_bch',
 		'type'              => 'select',
 		'title'             => sprintf( __( '%s Processing API', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Choose the API provider you want to use to look up %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
@@ -804,13 +804,13 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-api',
-		'id'         => 'processing_api_bcc_info',
+		'id'         => 'processing_api_bch_info',
 		'type'       => 'info',
 		'style'      => 'critical',
 		'icon'       => 'el el-warning-sign',
 		'required'   => array(
-			array( 'processing_api_bcc', 'equals', 'custom' ),
-			array( 'custom_api_bcc', 'equals', '' ),
+			array( 'processing_api_bch', 'equals', 'custom' ),
+			array( 'custom_api_bch', 'equals', '' ),
 		),
 		'desc'       => sprintf( __( 'Please enter a valid URL in the field below to use a custom %s processing API', 'cryptowoo' ), 'Bitcoin Cash' ),
 	) );
@@ -820,16 +820,16 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'processing-api',
-		'id'                => 'custom_api_bcc',
+		'id'                => 'custom_api_bch',
 		'type'              => 'text',
 		'title'             => sprintf( __( '%s Insight API URL', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Connect to any %sInsight API%s instance.', 'cryptowoo' ), '<a href="https://github.com/bitpay/insight-api/" title="Insight API" target="_blank">', '</a>' ),
-		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttp://blockdozer.com/insight-api/txs?address=%sRoot URL: %shttp://blockdozer.com/insight-api/%s', 'cryptowoo-bcc-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
+		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttp://blockdozer.com/insight-api/txs?address=%sRoot URL: %shttp://blockdozer.com/insight-api/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
 		'placeholder'       => 'http://blockdozer.com/insight-api/',
-		'required'          => array( 'processing_api_bcc', 'equals', 'custom' ),
+		'required'          => array( 'processing_api_bch', 'equals', 'custom' ),
 		'validate_callback' => 'redux_validate_custom_api',
 		'ajax_save'         => false,
-		'msg'               => __( 'Invalid BCC Insight API URL', 'cryptowoo' ),
+		'msg'               => __( 'Invalid BCH Insight API URL', 'cryptowoo' ),
 		'default'           => '',
 		'text_hint'         => array(
 			'title'   => 'Please Note:',
@@ -845,23 +845,23 @@ function cwbcc_add_fields() {
 		'ajax_save'         => false, // Force page load when this changes
 		'desc'              => sprintf( __( '%sMore info%s', 'cryptowoo' ), '<a href="http://dev.blockcypher.com/#rate-limits-and-tokens" title="BlockCypher Docs: Rate limits and tokens" target="_blank">', '</a>' ),
 		'title'             => __( 'BlockCypher Token (optional)', 'cryptowoo' ),
-		'subtitle'          => sprintf( __( 'Use the API token from your %sBlockCypher%s account.', 'cryptowoo' ), '<strong><a href="https://accounts.blockcypher.com/" title="BlockCypher account bccboard" target="_blank">', '</a></strong>' ),
+		'subtitle'          => sprintf( __( 'Use the API token from your %sBlockCypher%s account.', 'cryptowoo' ), '<strong><a href="https://accounts.blockcypher.com/" title="BlockCypher account bchboard" target="_blank">', '</a></strong>' ),
 		'validate_callback' => 'redux_validate_token'
 	) );
 
 	// API Resource control information
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'processing-api-resources',
-		'id'                => 'processing_fallback_url_bcc',
+		'id'                => 'processing_fallback_url_bch',
 		'type'              => 'text',
 		'title'             => sprintf( __( 'Blockdozer Bitcoin Cash API Fallback', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Fallback to any %sInsight API%s instance in case the Blockdozer API fails. Retry Blockdozer upon beginning of the next hour. Leave empty to disable.', 'cryptowoo' ), '<a href="https://github.com/bitpay/insight-api/" title="Insight API" target="_blank">', '</a>' ),
-		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttp://blockdozer.com/insight-api/txs?address=XtuVUju4Baaj7YXShQu4QbLLR7X2aw9Gc8%sRoot URL: %shttp://blockdozer.com/insight-api/%s', 'cryptowoo-bcc-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
+		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttp://blockdozer.com/insight-api/txs?address=XtuVUju4Baaj7YXShQu4QbLLR7X2aw9Gc8%sRoot URL: %shttp://blockdozer.com/insight-api/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
 		'placeholder'       => 'http://blockdozer.com/insight-api/',
-		'required'          => array( 'processing_api_bcc', 'equals', 'blockcypher' ),
+		'required'          => array( 'processing_api_bch', 'equals', 'blockcypher' ),
 		'validate_callback' => 'redux_validate_custom_api',
 		'ajax_save'         => false,
-		'msg'               => __( 'Invalid BCC Insight API URL', 'cryptowoo' ),
+		'msg'               => __( 'Invalid BCH Insight API URL', 'cryptowoo' ),
 		'default'           => 'http://blockdozer.com/insight-api/',
 		'text_hint'         => array(
 			'title'   => 'Please Note:',
@@ -873,9 +873,9 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'rates-exchange',
-		'id'                => 'preferred_exchange_bcc',
+		'id'                => 'preferred_exchange_bch',
 		'type'              => 'select',
-		'title'             => 'Bitcoin Cash Exchange (BCC/BTC)',
+		'title'             => 'Bitcoin Cash Exchange (BCH/BTC)',
 		'subtitle'          => sprintf( __( 'Choose the exchange you prefer to use to calculate the %sBitcoin Cash to Bitcoin exchange rate%s', 'cryptowoo' ), '<strong>', '</strong>.' ),
 		'desc'              => sprintf( __( 'Cross-calculated via BTC/%s', 'cryptowoo' ), $woocommerce_currency ),
 		'options'           => array(
@@ -894,7 +894,7 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'    => 'rates-multiplier',
-		'id'            => 'multiplier_bcc',
+		'id'            => 'multiplier_bch',
 		'type'          => 'slider',
 		'title'         => sprintf( __( '%s exchange rate multiplier', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'      => sprintf( __( 'Extra multiplier to apply when calculating %s prices.', 'cryptowoo' ), 'Bitcoin Cash' ),
@@ -913,7 +913,7 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'rewriting',
-		'id'         => 'preferred_block_explorer_bcc',
+		'id'         => 'preferred_block_explorer_bch',
 		'type'       => 'select',
 		'title'      => sprintf( __( '%s Block Explorer', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'   => sprintf( __( 'Choose the block explorer you want to use for links to the %s blockchain.', 'cryptowoo' ), 'Bitcoin Cash' ),
@@ -929,25 +929,25 @@ function cwbcc_add_fields() {
 
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'rewriting',
-		'id'         => 'preferred_block_explorer_bcc_info',
+		'id'         => 'preferred_block_explorer_bch_info',
 		'type'       => 'info',
 		'style'      => 'critical',
 		'icon'       => 'el el-warning-sign',
 		'required'   => array(
-			array( 'preferred_block_explorer_bcc', '=', 'custom' ),
-			array( 'custom_block_explorer_bcc', '=', '' ),
+			array( 'preferred_block_explorer_bch', '=', 'custom' ),
+			array( 'custom_block_explorer_bch', '=', '' ),
 		),
 		'desc'       => sprintf( __( 'Please enter a valid URL in the field below to use a custom %s block explorer', 'cryptowoo' ), 'Bitcoin Cash' ),
 	) );
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'rewriting',
-		'id'                => 'custom_block_explorer_bcc',
+		'id'                => 'custom_block_explorer_bch',
 		'type'              => 'text',
 		'title'             => sprintf( __( 'Custom %s Block Explorer URL', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => __( 'Link to a block explorer of your choice.', 'cryptowoo' ),
 		'desc'              => sprintf( __( 'The URL to the page that displays the information for a single address.%sPlease add %s{{ADDRESS}}%s as placeholder for the cryptocurrency address in the URL.%s', 'cryptowoo' ), '<br><strong>', '<code>', '</code>', '</strong>' ),
 		'placeholder'       => 'http://blockdozer.com/insight-api/txs?address={$address}',
-		'required'          => array( 'preferred_block_explorer_bcc', '=', 'custom' ),
+		'required'          => array( 'preferred_block_explorer_bch', '=', 'custom' ),
 		'validate_callback' => 'redux_validate_custom_blockexplorer',
 		'ajax_save'         => false,
 		'msg'               => __( 'Invalid custom block explorer URL', 'cryptowoo' ),
@@ -959,7 +959,7 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'rewriting-switcher',
-		'id'         => 'decimals_BCC',
+		'id'         => 'decimals_BCH',
 		'type'       => 'select',
 		'title'      => sprintf( __( '%s amount decimals', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'   => '',
@@ -984,11 +984,11 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'wallets-hdwallet',
-		'id'         => 'wallets-hdwallet-bcc',
+		'id'         => 'wallets-hdwallet-bch',
 		'type'       => 'section',
 		'title'      => __( 'Bitcoin Cash', 'cryptowoo-hd-wallet-addon' ),
 		//'required' => array('testmode_enabled','equals','0'),
-		'icon'       => 'cc-BCC',
+		'icon'       => 'cc-BCH',
 		//'subtitle' => __('Use the field with the correct prefix of your Litecoin MPK. The prefix depends on the wallet client you used to generate the key.', 'cryptowoo-hd-wallet-addon'),
 		'indent'     => true,
 	) );
@@ -998,14 +998,14 @@ function cwbcc_add_fields() {
 	 */
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'wallets-hdwallet',
-		'id'                => 'cryptowoo_bcc_mpk',
+		'id'                => 'cryptowoo_bch_mpk',
 		'type'              => 'text',
 		'ajax_save'         => false,
 		'username'          => false,
-		'title'             => sprintf( __( '%sprefix%s', 'cryptowoo-hd-wallet-addon' ), '<b>BCC "xpub..." ', '</b>' ),
+		'title'             => sprintf( __( '%sprefix%s', 'cryptowoo-hd-wallet-addon' ), '<b>BCH "xpub..." ', '</b>' ),
 		'desc'              => sprintf(__('Remove this key to use the %s prefix format.', 'cryptowoo-hd-wallet-addon'), 'drkv'),
 		'validate_callback' => 'redux_validate_mpk',
-		//'required' => array('cryptowoo_bcc_mpk', 'equals', ''),
+		//'required' => array('cryptowoo_bch_mpk', 'equals', ''),
 		'placeholder'       => 'xpub...',
 		// xpub format
 		'text_hint'         => array(
@@ -1015,7 +1015,7 @@ function cwbcc_add_fields() {
 	) );
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id'        => 'wallets-hdwallet',
-		'id'         => 'derivation_path_bcc',
+		'id'         => 'derivation_path_bch',
 		'type'       => 'select',
 		'subtitle'   => '',
 		'title'      => sprintf( __( '%s Derivation Path', 'cryptowoo-hd-wallet-addon' ), 'Bitcoin Cash' ),
@@ -1075,7 +1075,7 @@ function cwbcc_add_fields() {
 			'title'             => sprintf( __( '%s Derivation Path', 'cryptowoo-hd-wallet-addon' ), 'BTCTEST' ),
 			'desc'              => __('Change the derivation path to match the derivation path of your wallet client.', 'cryptowoo-hd-wallet-addon'),
 			'validate_callback' => 'redux_validate_derivation_path',
-			'options'    => array(
+			'options'    => array( 
 				'0/' => __('m/0/i (e.g. Electrum Standard Wallet)', 'cryptowoo-hd-wallet-addon'),
 				'' => __('m/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon'),
 			),
