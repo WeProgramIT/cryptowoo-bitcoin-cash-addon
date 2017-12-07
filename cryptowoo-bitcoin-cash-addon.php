@@ -126,7 +126,6 @@ if ( cwbch_hd_enabled() ) {
 	// Exchange rates
 	add_filter( 'cw_force_update_exchange_rates', 'cwbch_force_update_exchange_rates', 10, 2 );
 	add_filter( 'cw_cron_update_exchange_data', 'cwbch_cron_update_exchange_data', 10, 2 );
-	add_filter( 'cw_get_poloniex_price_coin', 'cwbch_get_poloniex_price_coin', 10, 1);
 
 	// Catch failing processing API (only if processing_fallback is enabled)
 	add_filter( 'cw_get_tx_api_config', 'cwbch_cw_get_tx_api_config', 10, 3 );
@@ -511,20 +510,6 @@ function cwbch_cron_update_exchange_data($data, $options) {
 		}
 	}
 	return $data;
-}
-
-/**
- * Override Poloniex coin name (BCH instead of BCH)
- *
- * @param $currency
- *
- * @return string
- */
-function cwbch_get_poloniex_price_coin($currency) {
-    if($currency === 'BCH') {
-        $currency = 'BCH';
-    }
-    return $currency;
 }
 
 /**
