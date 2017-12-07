@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Plugin Name: CryptoWoo Bitcoin Cash Add-on
  * Plugin URI: https://www.cryptowoo.com/shop/cryptowoo-bitcoin-cash-addon
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Olsm|OlavOlsm|Keys4Coins
  * Author URI: https://www.keys4coins.com
  * License: GPLv2
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  */
 
-define( 'CWBCH_VER', '0.1.0' );
+define( 'CWBCH_VER', '0.1.1' );
 define( 'CWBCH_FILE', __FILE__ );
 
 // Load the plugin update library if it is not already loaded
