@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * License: GPLv2
  * Text Domain: cryptowoo-bch-addon
  * Domain Path: /lang
+ * WC tested up to: 3.2.5
  *
  */
 
