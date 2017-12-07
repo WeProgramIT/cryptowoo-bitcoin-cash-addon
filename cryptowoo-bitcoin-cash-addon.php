@@ -110,7 +110,6 @@ if ( cwbch_hd_enabled() ) {
 	add_filter( 'get_mpk_data_network', 'cwbch_get_mpk_data_network', 10, 3 );
 	//ToDo: add_filter( 'cw_blockcypher_currencies', 'cwbch_add_currency_to_array', 10, 1 );
 	add_filter( 'cw_discovery_notice', 'cwbch_add_currency_to_array', 10, 1 );
-	add_filter( 'cw_discovery_notice_action', 'cwbch_add_currency_to_array', 10, 1 );
 
 	// Currency params
 	add_filter( 'cw_get_currency_params', 'cwbch_get_currency_params', 10, 2 );
