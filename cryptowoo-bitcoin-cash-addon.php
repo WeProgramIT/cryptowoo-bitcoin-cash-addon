@@ -1023,7 +1023,7 @@ function cwbch_add_fields() {
 		'validate_callback' => 'redux_validate_derivation_path',
 		'options'    => array(
 			'0/' => __('m/0/i (e.g. Electrum Standard Wallet)', 'cryptowoo-hd-wallet-addon'),
-			'' => __('m/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon'),
+			'm' => __('m/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon'),
 		),
 		'default'    => '0/',
 		'select2'    => array( 'allowClear' => false )
@@ -1077,7 +1077,7 @@ function cwbch_add_fields() {
 			'validate_callback' => 'redux_validate_derivation_path',
 			'options'    => array( 
 				'0/' => __('m/0/i (e.g. Electrum Standard Wallet)', 'cryptowoo-hd-wallet-addon'),
-				'' => __('m/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon'),
+				'm' => __('m/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon'),
 			),
 			'default'    => '0/',
 			'select2'    => array( 'allowClear' => false )
