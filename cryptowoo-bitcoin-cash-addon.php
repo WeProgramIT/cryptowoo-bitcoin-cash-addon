@@ -418,7 +418,6 @@ function cwbch_cw_get_shifty_coins( $select ) {
  */
 function cwbch_index_key_ids( $index_key_ids ) {
 	$index_key_ids['BCH'] = 'cryptowoo_bch_index';
-
 	return $index_key_ids;
 }
 
@@ -432,8 +431,6 @@ function cwbch_index_key_ids( $index_key_ids ) {
  */
 function cwbch_mpk_key_ids( $mpk_key_ids ) {
 	$mpk_key_ids['BCH'] = 'cryptowoo_bch_mpk';
-	$mpk_key_ids['BCH_E'] = 'cryptowoo_bch_mpk';
-
 	return $mpk_key_ids;
 }
 
