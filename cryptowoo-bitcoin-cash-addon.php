@@ -173,7 +173,7 @@ add_action( 'wp_head', 'cwbch_coin_icon_color' );
  * @return mixed
  */
 function cwbch_cryptowoo_misconfig_notice( $enabled, $options ) {
-	$enabled['BCH'] = $options['processing_api_bch'] === 'disabled' && ( (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options ) || (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options ) );
+	$enabled['BCH'] = $options['processing_api_bch'] === 'disabled' && ( (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options ) );
 
 	return $enabled;
 }
@@ -251,7 +251,7 @@ function cwbch_wallet_config( $wallet_config, $currency, $options ) {
 			'multiplier'    => (float) $options['multiplier_bch'],
 			'safe_address'  => false,
 			'decimals'      => 8,
-			'mpk_key'       => ! CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options, false ) ? 'cryptowoo_bch_mpk' : 'cryptowoo_bch_mpk',
+			'mpk_key'       => 'cryptowoo_bch_mpk',
 			'fwd_addr_key'  => 'safe_bch_address',
 			'threshold_key' => 'forwarding_threshold_bch'
 		);
@@ -377,8 +377,8 @@ function cwbch_validate_custom_api_currency( $currency, $field_id ) {
  * @return array
  */
 function cwbch_cryptowoo_is_ready( $enabled, $options, $changed_values ) {
-	$enabled['BCH']           = (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options, false );
-	$enabled['BCH_transient'] = (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $changed_values, false ) ?: (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $changed_values, false );
+	$enabled['BCH']           = (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $options, false );
+	$enabled['BCH_transient'] = (bool) CW_Validate::check_if_unset( 'cryptowoo_bch_mpk', $changed_values, false );
 
 	return $enabled;
 }
@@ -450,11 +450,7 @@ function cwbch_mpk_key_ids( $mpk_key_ids ) {
  */
 function cwbch_get_mpk_data_mpk_key( $mpk_key, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
-		if ( isset( $options['cryptowoo_bch_mpk'] ) && $options['cryptowoo_bch_mpk'] !== '' ) {
-			$mpk_key = "cryptowoo_bch_mpk";
-		} else {
-			$mpk_key = "cryptowoo_bch_mpk";
-		}
+		$mpk_key = "cryptowoo_bch_mpk";
 	}
 
 	return $mpk_key;
