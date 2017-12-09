@@ -407,7 +407,6 @@ add_filter( 'is_cryptostore', 'cwbch_is_cryptostore', 10, 2 );
  */
 function cwbch_cw_get_shifty_coins( $select ) {
 	$select['BCH'] = sprintf( __( 'Display only on %s payment pages', 'cryptowoo' ), 'Bitcoin Cash' );
-
 	return $select;
 }
 
@@ -657,7 +656,7 @@ function cwbch_add_fields() {
 		'type'       => 'spinner',
 		'title'      => sprintf( __( '%s Minimum Confirmations', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'       => sprintf( __( 'Minimum number of confirmations for <strong>%s</strong> transactions - %s Confirmation Threshold', 'cryptowoo' ), 'Bitcoin Cash', 'Bitcoin Cash' ),
-		'default'    => 5,
+		'default'    => 1,
 		'min'        => 1,
 		'step'       => 1,
 		'max'        => 100,
