@@ -465,6 +465,7 @@ function cwbch_get_mpk_data_mpk_key( $mpk_key, $currency, $options ) {
  * @param $options
  *
  * @return object
+ * @throws Exception
  */
 function cwbch_get_mpk_data_network( $mpk_data, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
