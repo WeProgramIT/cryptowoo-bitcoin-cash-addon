@@ -126,6 +126,7 @@ if ( cwbch_hd_enabled() ) {
 	// Exchange rates
 	add_filter( 'cw_force_update_exchange_rates', 'cwbch_force_update_exchange_rates', 10, 2 );
 	add_filter( 'cw_cron_update_exchange_data', 'cwbch_cron_update_exchange_data', 10, 2 );
+	add_filter( 'cw_get_bittrex_price_coin', 'cwbch_get_bittrex_price_coin', 10, 1 );
 
 	// Catch failing processing API (only if processing_fallback is enabled)
 	add_filter( 'cw_get_tx_api_config', 'cwbch_cw_get_tx_api_config', 10, 3 );
@@ -407,6 +408,7 @@ add_filter( 'is_cryptostore', 'cwbch_is_cryptostore', 10, 2 );
  */
 function cwbch_cw_get_shifty_coins( $select ) {
 	$select['BCH'] = sprintf( __( 'Display only on %s payment pages', 'cryptowoo' ), 'Bitcoin Cash' );
+
 	return $select;
 }
 
@@ -509,6 +511,21 @@ function cwbch_cron_update_exchange_data( $data, $options ) {
 	}
 
 	return $data;
+}
+
+/**
+ * Override Bittrex coin name (BCC instead of BCH)
+ *
+ * @param $currency
+ *
+ * @return string
+ */
+function cwbch_get_bittrex_price_coin( $currency ) {
+	if ( $currency === 'BCH' ) {
+		$currency = 'BCC';
+	}
+
+	return $currency;
 }
 
 /**
@@ -989,7 +1006,7 @@ function cwbch_add_fields() {
 		'ajax_save'         => false,
 		'username'          => false,
 		'title'             => sprintf( __( '%sprefix%s', 'cryptowoo-hd-wallet-addon' ), '<b>BCH "xpub..." ', '</b>' ),
-		'desc'              => __('Bitcoin Cash HD Wallet Extended Public Key (xpub...)', 'cryptowoo-hd-wallet-addon'),
+		'desc'              => __( 'Bitcoin Cash HD Wallet Extended Public Key (xpub...)', 'cryptowoo-hd-wallet-addon' ),
 		'validate_callback' => 'redux_validate_mpk',
 		//'required' => array('cryptowoo_bch_mpk', 'equals', ''),
 		'placeholder'       => 'xpub...',
