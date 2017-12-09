@@ -988,7 +988,7 @@ function cwbch_add_fields() {
 		'ajax_save'         => false,
 		'username'          => false,
 		'title'             => sprintf( __( '%sprefix%s', 'cryptowoo-hd-wallet-addon' ), '<b>BCH "xpub..." ', '</b>' ),
-		'desc'              => sprintf( __( 'Remove this key to use the %s prefix format.', 'cryptowoo-hd-wallet-addon' ), 'drkv' ),
+		'desc'              => __('Bitcoin Cash HD Wallet Extended Public Key (xpub...)', 'cryptowoo-hd-wallet-addon'),
 		'validate_callback' => 'redux_validate_mpk',
 		//'required' => array('cryptowoo_bch_mpk', 'equals', ''),
 		'placeholder'       => 'xpub...',
