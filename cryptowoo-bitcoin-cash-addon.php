@@ -326,10 +326,11 @@ function cwbch_link_to_address( $url, $address, $currency, $options ) {
 function cwbch_cw_update_tx_details( $batch_data, $batch_currency, $orders, $processing, $options ) {
 	if ( $batch_currency == "BCH" && $options['processing_api_bch'] == "blockdozer" ) {
 		$options['custom_api_bch']     = "http://blockdozer.com/insight-api/";
-		$batch                         = [ 0 => $orders[0]->address ];
-		$batch_data[ $batch_currency ] = CW_Insight::insight_batch_tx_update( "BCH", $batch, $orders, $options );
-		usleep( 333333 ); // Max ~3 requests/second TODO remove when we have proper rate limiting
 	}
+
+	$batch                         = [ 0 => $orders[0]->address ];
+	$batch_data[ $batch_currency ] = CW_Insight::insight_batch_tx_update( "BCH", $batch, $orders, $options );
+	usleep( 333333 ); // Max ~3 requests/second TODO remove when we have proper rate limiting
 
 	return $batch_data;
 }
