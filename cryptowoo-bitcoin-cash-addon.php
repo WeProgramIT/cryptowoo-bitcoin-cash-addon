@@ -22,13 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'CWBCH_VER', '1.2' );
 define( 'CWBCH_FILE', __FILE__ );
 
-// Load the plugin update library if it is not already loaded
-/* ToDo: add license
+// Load the plugin update library if it is not already loaded ToDo
 if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( plugin_dir_path( CWBCH_FILE ) . 'am-license-menu.php' ) ) {
 	require_once( plugin_dir_path( CWBCH_FILE ) . 'am-license-menu.php' );
-	CWBCH_License_Menu::instance( CWBCH_FILE, 'CryptoWoo Bitcoin Cash Addon', CWBCH_VER, 'plugin', 'https://www.cryptowoo.com/' );
+	CWBCH_License_Menu::instance( CWBCH_FILE, 'CryptoWoo Bitcoin Cash Add-on', CWBCH_VER, 'plugin', 'https://www.cryptowoo.com/' );
 }
-*/
 
 /**
  * Plugin activation
