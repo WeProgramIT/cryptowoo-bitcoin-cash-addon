@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * GitHub Plugin URI: Olsm/cryptowoo-bitcoin-cash-addon
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
- * Version: 1.1
+ * Version: 1.2
  * Author: Olav Småriset
  * Author URI: https://github.com/Olsm
  * License: GPLv2
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  */
 
-define( 'CWBCH_VER', '1.1' );
+define( 'CWBCH_VER', '1.2' );
 define( 'CWBCH_FILE', __FILE__ );
 
 // Load the plugin update library if it is not already loaded
@@ -325,14 +325,18 @@ function cwbch_link_to_address( $url, $address, $currency, $options ) {
  * @return string
  */
 function cwbch_cw_update_tx_details( $batch_data, $batch_currency, $orders, $processing, $options ) {
-	if ($batch_currency == "BCH") {
+	if ( $batch_currency == "BCH" ) {
 		if ( $options['processing_api_bch'] == "cashexplorer" ) {
-			$options['custom_api_bch']     = "https://cashexplorer.bitcoin.com/api";
+			$options['custom_api_bch'] = "https://cashexplorer.bitcoin.com/api";
 		} else if ( $options['processing_api_bch'] == "blockdozer" ) {
-			$options['custom_api_bch']     = "http://blockdozer.com/insight-api/";
+			$options['custom_api_bch'] = "http://blockdozer.com/insight-api/";
 		}
 
-		$batch                         = [ 0 => $orders[0]->address ];
+		$batch = [];
+		foreach ( $orders as $order ) {
+			$batch[] = $order->address;
+		}
+
 		$batch_data[ $batch_currency ] = CW_Insight::insight_batch_tx_update( "BCH", $batch, $orders, $options );
 		usleep( 333333 ); // Max ~3 requests/second TODO remove when we have proper rate limiting
 	}
@@ -800,9 +804,9 @@ function cwbch_add_fields() {
 		'subtitle'          => sprintf( __( 'Choose the API provider you want to use to look up %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'options'           => array(
 			'cashexplorer' => 'cashexplorer.bitcoin.com',
-            'blockdozer' => 'Blockdozer.com',
-			'custom'     => __( 'Custom (no testnet)', 'cryptowoo' ),
-			'disabled'   => __( 'Disabled', 'cryptowoo' ),
+			'blockdozer'   => 'Blockdozer.com',
+			'custom'       => __( 'Custom (no testnet)', 'cryptowoo' ),
+			'disabled'     => __( 'Disabled', 'cryptowoo' ),
 		),
 		'desc'              => '',
 		'default'           => 'disabled',
@@ -931,10 +935,10 @@ function cwbch_add_fields() {
 		'subtitle'   => sprintf( __( 'Choose the block explorer you want to use for links to the %s blockchain.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'       => '',
 		'options'    => array(
-			'autoselect' => __( 'Autoselect by processing API', 'cryptowoo' ),
+			'autoselect'   => __( 'Autoselect by processing API', 'cryptowoo' ),
 			'cashexplorer' => 'cashexplorer.bitcoin.com',
-			'blockdozer' => 'blockdozer.com',
-			'custom'     => __( 'Custom (enter URL below)' ),
+			'blockdozer'   => 'blockdozer.com',
+			'custom'       => __( 'Custom (enter URL below)' ),
 		),
 		'default'    => 'cashexplorer',
 		'select2'    => array( 'allowClear' => false )
