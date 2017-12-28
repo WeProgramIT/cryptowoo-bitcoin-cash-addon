@@ -21,10 +21,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'CWBCH_VER', '1.2' );
 define( 'CWBCH_FILE', __FILE__ );
+$plugin_dir = WP_PLUGIN_DIR;
+$hd_add_on_file = 'cryptowoo-hd-wallet-addon/cryptowoo-hd-wallet-addon.php';
+$hd_add_on_dir = $plugin_dir . '/' . $hd_add_on_file;
+$cw_plugin_dir = $plugin_dir . '/cryptowoo/cryptowoo.php';
 
-// Load the plugin update library if it is not already loaded ToDo
-if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( plugin_dir_path( CWBCH_FILE ) . 'am-license-menu.php' ) ) {
-	require_once( plugin_dir_path( CWBCH_FILE ) . 'am-license-menu.php' );
+// Load the plugin update library if it is not already loaded
+if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( plugin_dir_path( $hd_add_on_dir ) . 'am-license-menu.php' ) ) {
+	require_once( plugin_dir_path( $hd_add_on_dir ) . 'am-license-menu.php' );
+	class CWBCH_License_Menu extends CWHD_License_Menu {};
 	CWBCH_License_Menu::instance( CWBCH_FILE, 'CryptoWoo Bitcoin Cash Add-on', CWBCH_VER, 'plugin', 'https://www.cryptowoo.com/' );
 }
 
@@ -32,11 +37,11 @@ if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( plugin_dir_path( CWB
  * Plugin activation
  */
 function cryptowoo_bch_addon_activate() {
+    global $hd_add_on_file;
+    global $hd_add_on_dir;
+    global $cw_plugin_dir;
 
-	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-
-	$hd_add_on_file = 'cryptowoo-hd-wallet-addon/cryptowoo-hd-wallet-addon.php';
-	if ( ! file_exists( WP_PLUGIN_DIR . '/' . $hd_add_on_file ) || ! file_exists( WP_PLUGIN_DIR . '/cryptowoo/cryptowoo.php' ) ) {
+	if ( ! file_exists( $hd_add_on_dir ) || ! file_exists( $cw_plugin_dir ) ) {
 
 		// If WooCommerce is not installed then show installation notice
 		add_action( 'admin_notices', 'cryptowoo_bch_notinstalled_notice' );
