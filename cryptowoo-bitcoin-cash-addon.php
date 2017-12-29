@@ -77,7 +77,7 @@ function cryptowoo_bch_inactive_notice() {
  * CryptoWoo HD Wallet add-on not installed notice
  */
 function cryptowoo_bch_notinstalled_notice() {
-	$addon_link = '<a href="https://www.cryptowoo.com/shop/cryptowoo-hd-wallet-addon-old/" target="_blank">CryptoWoo HD Wallet add-on</a>';
+	$addon_link = '<a href="https://www.cryptowoo.com/shop/cryptowoo-hd-wallet-addon/" target="_blank">CryptoWoo HD Wallet add-on</a>';
 	?>
     <div class="error">
         <p><?php printf( __( '<b>CryptoWoo Bitcoin Cash add-on error!</b><br>It seems like the CryptoWoo HD Wallet add-on is not installed.<br>
@@ -1009,10 +1009,10 @@ function cwbch_add_fields() {
 		'section_id' => 'wallets-hdwallet',
 		'id'         => 'wallets-hdwallet-bch',
 		'type'       => 'section',
-		'title'      => __( 'Bitcoin Cash', 'cryptowoo-hd-wallet-addon-old' ),
+		'title'      => __( 'Bitcoin Cash', 'cryptowoo-hd-wallet-addon' ),
 		//'required' => array('testmode_enabled','equals','0'),
 		'icon'       => 'cc-BCH',
-		//'subtitle' => __('Use the field with the correct prefix of your Litecoin MPK. The prefix depends on the wallet client you used to generate the key.', 'cryptowoo-hd-wallet-addon-old'),
+		//'subtitle' => __('Use the field with the correct prefix of your Litecoin MPK. The prefix depends on the wallet client you used to generate the key.', 'cryptowoo-hd-wallet-addon'),
 		'indent'     => true,
 	) );
 
@@ -1025,15 +1025,15 @@ function cwbch_add_fields() {
 		'type'              => 'text',
 		'ajax_save'         => false,
 		'username'          => false,
-		'title'             => sprintf( __( '%sprefix%s', 'cryptowoo-hd-wallet-addon-old' ), '<b>BCH "xpub..." ', '</b>' ),
-		'desc'              => __( 'Bitcoin Cash HD Wallet Extended Public Key (xpub...)', 'cryptowoo-hd-wallet-addon-old' ),
+		'title'             => sprintf( __( '%sprefix%s', 'cryptowoo-hd-wallet-addon' ), '<b>BCH "xpub..." ', '</b>' ),
+		'desc'              => __( 'Bitcoin Cash HD Wallet Extended Public Key (xpub...)', 'cryptowoo-hd-wallet-addon' ),
 		'validate_callback' => 'redux_validate_mpk',
 		//'required' => array('cryptowoo_bch_mpk', 'equals', ''),
 		'placeholder'       => 'xpub...',
 		// xpub format
 		'text_hint'         => array(
 			'title'   => 'Please Note:',
-			'content' => sprintf( __( 'If you enter a used key you will have to run the address discovery process after saving this setting.%sUse a dedicated HD wallet (or at least a dedicated xpub) for your store payments to prevent address reuse.', 'cryptowoo-hd-wallet-addon-old' ), '<br>' ),
+			'content' => sprintf( __( 'If you enter a used key you will have to run the address discovery process after saving this setting.%sUse a dedicated HD wallet (or at least a dedicated xpub) for your store payments to prevent address reuse.', 'cryptowoo-hd-wallet-addon' ), '<br>' ),
 		)
 	) );
 	Redux::setField( 'cryptowoo_payments', array(
@@ -1041,12 +1041,12 @@ function cwbch_add_fields() {
 		'id'                => 'derivation_path_bch',
 		'type'              => 'select',
 		'subtitle'          => '',
-		'title'             => sprintf( __( '%s Derivation Path', 'cryptowoo-hd-wallet-addon-old' ), 'Bitcoin Cash' ),
-		'desc'              => __( 'Change the derivation path to match the derivation path of your wallet client.', 'cryptowoo-hd-wallet-addon-old' ),
+		'title'             => sprintf( __( '%s Derivation Path', 'cryptowoo-hd-wallet-addon' ), 'Bitcoin Cash' ),
+		'desc'              => __( 'Change the derivation path to match the derivation path of your wallet client.', 'cryptowoo-hd-wallet-addon' ),
 		'validate_callback' => 'redux_validate_derivation_path',
 		'options'           => array(
-			'0/' => __( 'm/0/i (e.g. Electrum Standard Wallet)', 'cryptowoo-hd-wallet-addon-old' ),
-			'm'  => __( 'm/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon-old' ),
+			'0/' => __( 'm/0/i (e.g. Electrum Standard Wallet)', 'cryptowoo-hd-wallet-addon' ),
+			'm'  => __( 'm/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon' ),
 		),
 		'default'           => '0/',
 		'select2'           => array( 'allowClear' => false )
@@ -1067,10 +1067,10 @@ function cwbch_add_fields() {
 		'section_id' => 'wallets-hdwallet',
 		'id'         => 'wallets-hdwallet-testnet',
 		'type'       => 'section',
-		'title'      => __( 'TESTNET', 'cryptowoo-hd-wallet-addon-old' ),
+		'title'      => __( 'TESTNET', 'cryptowoo-hd-wallet-addon' ),
 		//'required' => array('testmode_enabled','equals','0'),
 		'icon'       => 'fa fa-flask',
-		'desc'       => __( 'Accept BTC testnet coins to addresses created via a "tpub..." extended public key. (testing purposes only!)<br><b>Depending on the position of the first unused address, it could take a while until your changes are saved.</b>', 'cryptowoo-hd-wallet-addon-old' ),
+		'desc'       => __( 'Accept BTC testnet coins to addresses created via a "tpub..." extended public key. (testing purposes only!)<br><b>Depending on the position of the first unused address, it could take a while until your changes are saved.</b>', 'cryptowoo-hd-wallet-addon' ),
 		'indent'     => true,
 	) );
 
@@ -1080,13 +1080,13 @@ function cwbch_add_fields() {
 		'type'              => 'text',
 		'ajax_save'         => false,
 		'username'          => false,
-		'desc'              => __( 'Bitcoin TESTNET extended public key (tpub...)', 'cryptowoo-hd-wallet-addon-old' ),
-		'title'             => __( 'Bitcoin TESTNET HD Wallet Extended Public Key', 'cryptowoo-hd-wallet-addon-old' ),
+		'desc'              => __( 'Bitcoin TESTNET extended public key (tpub...)', 'cryptowoo-hd-wallet-addon' ),
+		'title'             => __( 'Bitcoin TESTNET HD Wallet Extended Public Key', 'cryptowoo-hd-wallet-addon' ),
 		'validate_callback' => 'redux_validate_mpk',
 		'placeholder'       => 'tpub...',
 		'text_hint'         => array(
 			'title'   => 'Please Note:',
-			'content' => sprintf( __( 'If you enter a used key you will have to run the address discovery process after saving this setting.%sUse a dedicated HD wallet (or at least a dedicated xpub) for your store payments to prevent address reuse.', 'cryptowoo-hd-wallet-addon-old' ), '<br>' ),
+			'content' => sprintf( __( 'If you enter a used key you will have to run the address discovery process after saving this setting.%sUse a dedicated HD wallet (or at least a dedicated xpub) for your store payments to prevent address reuse.', 'cryptowoo-hd-wallet-addon' ), '<br>' ),
 		)
 	) );
 
@@ -1095,12 +1095,12 @@ function cwbch_add_fields() {
 		'id'                => 'derivation_path_btctest',
 		'type'              => 'select',
 		'subtitle'          => '',
-		'title'             => sprintf( __( '%s Derivation Path', 'cryptowoo-hd-wallet-addon-old' ), 'BTCTEST' ),
-		'desc'              => __( 'Change the derivation path to match the derivation path of your wallet client.', 'cryptowoo-hd-wallet-addon-old' ),
+		'title'             => sprintf( __( '%s Derivation Path', 'cryptowoo-hd-wallet-addon' ), 'BTCTEST' ),
+		'desc'              => __( 'Change the derivation path to match the derivation path of your wallet client.', 'cryptowoo-hd-wallet-addon' ),
 		'validate_callback' => 'redux_validate_derivation_path',
 		'options'           => array(
-			'0/' => __( 'm/0/i (e.g. Electrum Standard Wallet)', 'cryptowoo-hd-wallet-addon-old' ),
-			'm'  => __( 'm/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon-old' ),
+			'0/' => __( 'm/0/i (e.g. Electrum Standard Wallet)', 'cryptowoo-hd-wallet-addon' ),
+			'm'  => __( 'm/i (BIP44 Account)', 'cryptowoo-hd-wallet-addon' ),
 		),
 		'default'           => '0/',
 		'select2'           => array( 'allowClear' => false )
