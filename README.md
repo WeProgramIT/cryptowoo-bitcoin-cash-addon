@@ -8,7 +8,7 @@ Accept payments in Bitcoin Cash in WooCommerce with CryptoWoo.
 [CryptoWoo HD Wallet Addon](https://www.cryptowoo.com/shop/cryptowoo-hd-wallet-addon/)
 
 ## Installation
-1. Download git repository as zip.
+1. Download [latest release](https://github.com/Olsm/cryptowoo-bitcoin-cash-addon/releases/latest) as zip.
 2. Upload plugin in wordpress admin -> plugins.
 3. Activate plugin.
 
