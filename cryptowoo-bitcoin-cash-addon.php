@@ -167,9 +167,9 @@ function cwbch_coin_icon_color() { ?>
         }
 
         i.cc.BCH, i.cc.BCH-alt {
-            color: #F7931A;
+            color: #70c659;
         }
-    </style>
+    </style>K
 <?php }
 
 add_action( 'wp_head', 'cwbch_coin_icon_color' );
