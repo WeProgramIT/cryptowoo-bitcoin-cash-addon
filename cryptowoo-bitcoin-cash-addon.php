@@ -21,14 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'CWBCH_VER', '1.3' );
 define( 'CWBCH_FILE', __FILE__ );
-$plugin_dir     = WP_PLUGIN_DIR;
-$hd_add_on_file = 'cryptowoo-hd-wallet-addon/cryptowoo-hd-wallet-addon.php';
-$hd_add_on_dir  = $plugin_dir . '/' . $hd_add_on_file;
-$cw_plugin_dir  = $plugin_dir . '/cryptowoo/cryptowoo.php';
+$cw_dir = WP_PLUGIN_DIR . "/cryptowoo";
+$cw_license_path = "$cw_dir/am-license-menu.php";
 
 // Load the plugin update library if it is not already loaded
-if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( plugin_dir_path( $hd_add_on_dir ) . 'am-license-menu.php' ) ) {
-	require_once( plugin_dir_path( $hd_add_on_dir ) . 'am-license-menu.php' );
+if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( $cw_license_path ) ) {
+	require_once( $cw_license_path );
 
 	class CWBCH_License_Menu extends CW_License_Menu {};
 
@@ -39,11 +37,10 @@ if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( plugin_dir_path( $hd
  * Plugin activation
  */
 function cryptowoo_bch_addon_activate() {
-	global $hd_add_on_file;
-	global $hd_add_on_dir;
-	global $cw_plugin_dir;
+	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
-	if ( ! file_exists( $hd_add_on_dir ) || ! file_exists( $cw_plugin_dir ) ) {
+	$hd_add_on_file = 'cryptowoo-hd-wallet-addon/cryptowoo-hd-wallet-addon.php';
+	if ( ! file_exists( WP_PLUGIN_DIR . '/' . $hd_add_on_file ) || ! file_exists( WP_PLUGIN_DIR . '/cryptowoo/cryptowoo.php' ) ) {
 
 		// If WooCommerce is not installed then show installation notice
 		add_action( 'admin_notices', 'cryptowoo_bch_notinstalled_notice' );
@@ -88,9 +85,8 @@ function cryptowoo_bch_notinstalled_notice() {
 
 function cwbch_hd_enabled() {
 	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	global $hd_add_on_file;
 
-	return is_plugin_active( $hd_add_on_file ) && is_plugin_active( 'cryptowoo/cryptowoo.php' );
+	return is_plugin_active( 'cryptowoo-hd-wallet-addon/cryptowoo-hd-wallet-addon.php' ) && is_plugin_active( 'cryptowoo/cryptowoo.php' );
 }
 
 if ( cwbch_hd_enabled() ) {
