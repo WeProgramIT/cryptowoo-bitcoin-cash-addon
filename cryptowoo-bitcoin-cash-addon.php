@@ -28,7 +28,7 @@ $cw_license_path = "$cw_dir/am-license-menu.php";
 if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( $cw_license_path ) ) {
 	require_once( $cw_license_path );
 
-	class CWBCH_License_Menu extends CW_License_Menu {};
+	class CWBCH_License_Menu extends CWoo_License_Menu {};
 
 	CWBCH_License_Menu::instance( CWBCH_FILE, 'CryptoWoo Bitcoin Cash Add-on', CWBCH_VER, 'plugin', 'https://www.cryptowoo.com/' );
 }
@@ -149,7 +149,6 @@ if ( cwbch_hd_enabled() ) {
 	// Options page
 	add_action( 'plugins_loaded', 'cwbch_add_fields', 10 );
 
-
 }
 
 /**
@@ -165,7 +164,7 @@ function cwbch_coin_icon_color() { ?>
         i.cc.BCH, i.cc.BCH-alt {
             color: #70c659;
         }
-    </style>K
+    </style>
 <?php }
 
 add_action( 'wp_head', 'cwbch_coin_icon_color' );
