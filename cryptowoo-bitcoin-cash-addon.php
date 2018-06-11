@@ -486,6 +486,9 @@ function cwbch_get_mpk_data_mpk_key( $mpk_key, $currency, $options ) {
 function cwbch_get_mpk_data_network( $mpk_data, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
 		$mpk_data->network = BitWasp\Bitcoin\Network\NetworkFactory::bitcoin();
+		$mpk_data->network_config = new \BitWasp\Bitcoin\Key\Deterministic\HdPrefix\NetworkConfig($mpk_data->network, [
+			$mpk_data->slip132->p2pkh($mpk_data->bitcoinPrefixes)
+		]);
 	}
 
 	return $mpk_data;
