@@ -685,13 +685,12 @@ function cwbch_add_fields() {
 		'title'      => sprintf( __( '%s Minimum Confirmations', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'       => sprintf( __( 'Minimum number of confirmations for <strong>%s</strong> transactions - %s Confirmation Threshold', 'cryptowoo' ), 'Bitcoin Cash', 'Bitcoin Cash' ),
 		'default'    => 1,
-		'min'        => 1,
+		'min'        => 0,
 		'step'       => 1,
 		'max'        => 100,
 	) );
 
-	// ToDo: Enable raw zeroconf
-	/*
+	// Enable raw zeroconf
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-confirmations',
 		'id'         => 'bch_raw_zeroconf',
@@ -705,11 +704,10 @@ function cwbch_add_fields() {
 			array( 'cryptowoo_bch_min_conf', '=', 0 )
 		),
 	) );
-	*/
 
 
-	/*
-	 * ToDo: Zeroconf order amount threshold
+
+	// Zeroconf order amount threshold
 	Redux::setField( 'cryptowoo_payments', array(
 		'section_id' => 'processing-zeroconf',
 		'id'         => 'cryptowoo_max_unconfirmed_bch',
@@ -734,7 +732,7 @@ function cwbch_add_fields() {
 		'title'      => sprintf( __( '%s Zeroconf Threshold Disabled', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'       => sprintf( __( 'This option is disabled because you do not accept unconfirmed %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
 	) );
-	 */
+
 
 
 	/*
