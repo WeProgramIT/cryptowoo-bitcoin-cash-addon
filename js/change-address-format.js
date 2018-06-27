@@ -9,7 +9,6 @@ jQuery(document).ready(function ( $ ) {
     if(jQuery("#qrcode").length > 0 && CryptoWoo !== undefined ) {
         var functionName = 'change_addr_' + CryptoWoo.currency;
         if(typeof window[functionName] === "function"){
-            console.log(CryptoWoo);
             jQuery("#check").parent().append('<button id="change_addr_format" onclick="switchPaymentAddress()">Change to cash-address</button>');
         }
     }
