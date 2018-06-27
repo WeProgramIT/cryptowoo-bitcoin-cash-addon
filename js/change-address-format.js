@@ -16,6 +16,9 @@ jQuery(document).ready(function ( $ ) {
             jQuery('#qrcode').empty();
             var toCashAddress = bchaddr.toCashAddress(CryptoWoo.payment_address);
             var cashAddressWithoutLabel = toCashAddress.replace(/bitcoincash:/g,'');
+            if(toCashAddress.indexOf("amount") == -1){
+                toCashAddress += '?amount=' + CryptoWoo.amount;
+            }
 
             jQuery("#payment-address").text(cashAddressWithoutLabel);
 
