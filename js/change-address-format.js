@@ -10,7 +10,7 @@ jQuery(document).ready(function ( $ ) {
     if(jQuery("#qrcode").length > 0 && CryptoWoo !== undefined ) {
         var functionName = 'change_addr_' + CryptoWoo.currency;
         if(typeof window[functionName] === "function"){
-            jQuery("#check").parent().append('<button id="change_addr_format" onclick="switchPaymentAddress()">Change to legacy-address</button>');
+            jQuery("#check").parent().append('<button class="btn-change-addr-format" id="change_addr_format" onclick="switchPaymentAddress()">Change to legacy-address</button>');
         }
         if(CryptoWoo.currency == 'BCH' && bchaddr.isLegacyAddress(CryptoWoo.payment_address)){
             jQuery('#qrcode').empty();
