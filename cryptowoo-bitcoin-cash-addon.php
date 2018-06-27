@@ -22,6 +22,7 @@ define( 'CWBCH_VER', '1.3' );
 define( 'CWBCH_FILE', __FILE__ );
 $cw_dir          = WP_PLUGIN_DIR . "/cryptowoo";
 $cw_license_path = "$cw_dir/am-license-menu.php";
+add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
 // Load the plugin update library if it is not already loaded
 if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( $cw_license_path ) ) {
@@ -68,6 +69,22 @@ function cryptowoo_bch_inactive_notice() {
 	<?php
 }
 
+
+/**
+ * Register and enqueues public-facing JavaScript files.
+ */
+function enqueue_scripts() {
+	if ( is_checkout() ) {
+		wp_enqueue_script( 'cryptowoo-bitcoin-fee',
+			plugins_url( 'js/change-address-format.js', __FILE__ ),
+			[ 'wc-checkout', 'jquery' ],
+			1
+		);
+		// https://github.com/bitcoincashjs/bchaddr by Emilio Almansi
+		wp_enqueue_script( 'bchaddr', plugins_url('js/bchaddrjs-0.2.1.min.js', __FILE__), array('wc-checkout', 'jquery'), 1 );
+
+	}
+}
 
 /**
  * CryptoWoo HD Wallet add-on not installed notice
