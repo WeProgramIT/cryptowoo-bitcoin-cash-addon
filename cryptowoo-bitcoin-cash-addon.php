@@ -700,7 +700,7 @@ function cwbch_add_fields() {
 		'section_id' => 'processing-confirmations',
 		'id'         => 'cryptowoo_bch_min_conf',
 		'type'       => 'spinner',
-		'title'      => sprintf( __( '%s Minimum Confirmations', 'cryptowoo' ), 'Bitcoin Cash' ),
+		'title'      => sprintf( __( '%s Minimum Confirmations', 'cryptowoo' ), 'BCH' ),
 		'desc'       => sprintf( __( 'Minimum number of confirmations for <strong>%s</strong> transactions - %s Confirmation Threshold', 'cryptowoo' ), 'Bitcoin Cash', 'Bitcoin Cash' ),
 		'default'    => 1,
 		'min'        => 0,
