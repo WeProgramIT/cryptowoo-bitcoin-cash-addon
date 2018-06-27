@@ -316,6 +316,8 @@ function cwbch_processing_config( $pc_conf, $currency, $options ) {
  *
  * @return string
  */
+//TODO: Save cash address instead of legacy
+
 function cwbch_link_to_address( $url, $address, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
 		$url = "https://cashexplorer.bitcoin.com/address/{$address}";

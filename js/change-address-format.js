@@ -9,6 +9,7 @@ jQuery(document).ready(function ( $ ) {
     if(jQuery("#qrcode").length > 0 && CryptoWoo !== undefined ) {
         var functionName = 'change_addr_' + CryptoWoo.currency;
         if(typeof window[functionName] === "function"){
+            console.log(CryptoWoo);
             jQuery("#check").parent().append('<button id="change_addr_format" onclick="switchPaymentAddress()">Change to cash-address</button>');
         }
     }
@@ -43,9 +44,20 @@ function change_addr_BCH() {
     }
     sessionStorage.qr_payment_address = addressData;
 
+    var addressDataString = addressData;
+
+
+    if(addressData.indexOf("bitcoincash") == -1){
+        addressDataString = 'bitcoincash:' + addressData;
+    }
+    if(addressData.indexOf("amount") == -1){
+        addressDataString += '?amount=' + CryptoWoo.amount;
+    }
+
+
     //Add qrcode back
     new QRCode(document.getElementById("qrcode"), {
-        text: addressData,
+        text: addressDataString,
         width: 250,
         height: 250,
         colorDark : "#000000",
