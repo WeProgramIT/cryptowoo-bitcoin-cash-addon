@@ -5,13 +5,33 @@ sessionStorage.clear();
 
 jQuery(document).ready(function ( $ ) {
 
-    //Appends a switch-button
+    //Appends switch-button and qr_code
+    //TODO-Improvement: Refactor, more methods, DRY, etc.
     if(jQuery("#qrcode").length > 0 && CryptoWoo !== undefined ) {
         var functionName = 'change_addr_' + CryptoWoo.currency;
         if(typeof window[functionName] === "function"){
-            jQuery("#check").parent().append('<button id="change_addr_format" onclick="switchPaymentAddress()">Change to cash-address</button>');
+            jQuery("#check").parent().append('<button id="change_addr_format" onclick="switchPaymentAddress()">Change to legacy-address</button>');
+        }
+        if(CryptoWoo.currency == 'BCH' && bchaddr.isLegacyAddress(CryptoWoo.payment_address)){
+            jQuery('#qrcode').empty();
+            var toCashAddress = bchaddr.toCashAddress(CryptoWoo.payment_address);
+            var cashAddressWithoutLabel = toCashAddress.replace(/bitcoincash:/g,'');
+
+            jQuery("#payment-address").text(cashAddressWithoutLabel);
+
+            new QRCode(document.getElementById("qrcode"), {
+                text: toCashAddress,
+                width: 250,
+                height: 250,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.M
+            });
         }
     }
+
+
+
 
 });
 
@@ -22,7 +42,7 @@ function change_addr_BCH() {
 
     //TODO: Add REGEX to extract/edit only the address part of addressData?
     //TODO: Use newly added "currency" data added in CryptoWoo JSON and make address format based on that
-    var currentPaymentAddress = CryptoWoo.payment_address;
+    var currentPaymentAddress = bchaddr.toCashAddress(CryptoWoo.payment_address);
     var addr_format_button = jQuery("#change_addr_format");
     if(sessionStorage.qr_payment_address){
         currentPaymentAddress = sessionStorage.qr_payment_address;
@@ -53,6 +73,10 @@ function change_addr_BCH() {
         addressDataString += '?amount=' + CryptoWoo.amount;
     }
 
+    //Update send address
+    var addressWithoutLabel = addressData.replace(/bitcoincash:/g,'');
+
+    jQuery("#payment-address").text(addressWithoutLabel);
 
     //Add qrcode back
     new QRCode(document.getElementById("qrcode"), {
@@ -63,6 +87,8 @@ function change_addr_BCH() {
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.M
     });
+
+
 
 
 }
