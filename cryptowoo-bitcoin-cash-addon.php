@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC tested up to: 3.2.6
  */
 
-define( 'CWBCH_VER', '1.3' );
+define( 'CWBCH_VER', '1.4' );
 define( 'CWBCH_FILE', __FILE__ );
 $cw_dir          = WP_PLUGIN_DIR . "/cryptowoo";
 $cw_license_path = "$cw_dir/am-license-menu.php";
@@ -75,7 +75,7 @@ function cryptowoo_bch_inactive_notice() {
  */
 function enqueue_scripts() {
 	if ( is_checkout() ) {
-		wp_enqueue_script( 'cryptowoo-bitcoin-fee',
+		wp_enqueue_script( 'cryptowoo-bch-addres-format',
 			plugins_url( 'js/change-address-format.js', __FILE__ ),
 			[ 'wc-checkout', 'jquery' ],
 			1
