@@ -22,7 +22,7 @@ define( 'CWBCH_VER', '1.4' );
 define( 'CWBCH_FILE', __FILE__ );
 $cw_dir          = WP_PLUGIN_DIR . "/cryptowoo";
 $cw_license_path = "$cw_dir/am-license-menu.php";
-add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'enqueue_scripts_bch_addon' );
 
 // Load the plugin update library if it is not already loaded
 if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( $cw_license_path ) ) {
@@ -73,7 +73,7 @@ function cryptowoo_bch_inactive_notice() {
 /**
  * Register and enqueues public-facing JavaScript files.
  */
-function enqueue_scripts() {
+function enqueue_scripts_bch_addon() {
 	if ( is_checkout() ) {
 		wp_enqueue_script( 'cryptowoo-bch-addres-format',
 			plugins_url( 'js/change-address-format.js', __FILE__ ),
