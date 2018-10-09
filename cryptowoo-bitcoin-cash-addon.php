@@ -519,7 +519,7 @@ function cwbch_get_mpk_data_network( $mpk_data, $currency, $options ) {
  * @return array
  */
 function cwbch_force_update_exchange_rates( $results ) {
-	$results[ 'bch' ] = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCH', false, true );
+	$results[ 'bch' ] = CW_ExchangeRates::processing()->update_coin_fiat_rates( 'BCH', false, true );
 
 	return $results;
 }
@@ -533,7 +533,7 @@ function cwbch_force_update_exchange_rates( $results ) {
  * @return array
  */
 function cwbch_cron_update_exchange_data( $data, $options ) {
-	$bch = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCH', $options );
+	$bch = CW_ExchangeRates::processing()->update_coin_fiat_rates( 'BCH', $options );
 
 	// Maybe log exchange rate updates
 	if ( (bool) $options[ 'logging' ][ 'rates' ] ) {
