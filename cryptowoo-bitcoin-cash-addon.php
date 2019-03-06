@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * GitHub Plugin URI: Olsm/cryptowoo-bitcoin-cash-addon
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
- * Version: 1.3
+ * Version: 1.3.1
  * Author: Olav Småriset
  * Author URI: https://github.com/Olsm
  * License: GPLv2
@@ -168,20 +168,18 @@ if ( cwbch_hd_enabled() ) {
 }
 
 /**
- * Bitcoin Cash font color for aw-cryptocoins
+ * Font color for aw-cryptocoins
  * see cryptowoo/assets/fonts/aw-cryptocoins/cryptocoins-colors.css
  */
-function cwbch_coin_icon_color() { ?>
+function cwbch_coin_icon_color() {
+	?>
     <style type="text/css">
-        i.cc.BCH:before, i.cc.BCH-alt:before {
-            content: "\e9a6";
-        }
-
-        i.cc.BCH, i.cc.BCH-alt {
+        i.cc.<?php echo esc_attr( 'BCH' ); ?>, i.cc.<?php echo esc_attr( 'BCH-alt' ); ?> {
             color: #70c659;
         }
     </style>
-<?php }
+	<?php
+}
 
 add_action( 'wp_head', 'cwbch_coin_icon_color' );
 
