@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * GitHub Plugin URI: Olsm/cryptowoo-bitcoin-cash-addon
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
- * Version: 1.3.2
+ * Version: 1.3.2.1
  * Author: Olav Småriset
  * Author URI: https://github.com/Olsm
  * License: GPLv2
@@ -50,9 +50,7 @@ function cryptowoo_bch_addon_activate() {
 		add_action( 'admin_notices', 'cryptowoo_bch_inactive_notice' );
 
 		return;
-	} else {
-		include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-poloniex.php';
-  }
+	}
 
 	if( (defined('CWOO_VERSION' ) && version_compare(CWOO_VERSION, '0.22.0', '<'))  || (defined('HDWALLET_VER' ) && version_compare(HDWALLET_VER, '0.9.1', '<'))) {
 		deactivate_plugins( '/cryptowoo-bitcoin-cash-addon/cryptowoo-bitcoin-cash-addon.php', true );
@@ -171,6 +169,15 @@ if ( cwbch_hd_enabled() ) {
 	// Options page
 	add_action( 'plugins_loaded', 'cwbch_add_fields', 10 );
 
+	// Override Poloniex to have BCHABC instead of BCH as ticker
+	add_action( 'plugins_loaded', 'cwbch_override_exchange_poloniex', 10 );
+}
+
+/**
+ * Override Poloniex to have BCHABC instead of BCH as ticker
+ */
+function cwbch_override_exchange_poloniex() {
+	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-poloniex.php';
 }
 
 /**
