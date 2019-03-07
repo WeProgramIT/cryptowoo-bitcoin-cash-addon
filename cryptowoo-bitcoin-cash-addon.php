@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * GitHub Plugin URI: Olsm/cryptowoo-bitcoin-cash-addon
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
- * Version: 1.3
+ * Version: 1.3.2
  * Author: Olav Småriset
  * Author URI: https://github.com/Olsm
  * License: GPLv2
@@ -18,10 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC tested up to: 3.2.6
  */
 
-define( 'CWBCH_VER', '1.3' );
+define( 'CWBCH_VER', '1.4' );
 define( 'CWBCH_FILE', __FILE__ );
 $cw_dir          = WP_PLUGIN_DIR . "/cryptowoo";
 $cw_license_path = "$cw_dir/am-license-menu.php";
+add_action( 'wp_enqueue_scripts', 'enqueue_scripts_bch_addon' );
 
 // Load the plugin update library if it is not already loaded
 if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( $cw_license_path ) ) {
@@ -49,7 +50,9 @@ function cryptowoo_bch_addon_activate() {
 		add_action( 'admin_notices', 'cryptowoo_bch_inactive_notice' );
 
 		return;
-	}
+	} else {
+		include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-poloniex.php';
+  }
 
 	if( (defined('CWOO_VERSION' ) && version_compare(CWOO_VERSION, '0.22.0', '<'))  || (defined('HDWALLET_VER' ) && version_compare(HDWALLET_VER, '0.9.1', '<'))) {
 		deactivate_plugins( '/cryptowoo-bitcoin-cash-addon/cryptowoo-bitcoin-cash-addon.php', true );
@@ -72,6 +75,22 @@ function cryptowoo_bch_inactive_notice() {
 	<?php
 }
 
+
+/**
+ * Register and enqueues public-facing JavaScript files.
+ */
+function enqueue_scripts_bch_addon() {
+	if ( is_checkout() ) {
+		wp_enqueue_script( 'cryptowoo-bch-addres-format',
+			plugins_url( 'js/change-address-format.js', __FILE__ ),
+			[ 'wc-checkout', 'jquery' ],
+			1
+		);
+		// https://github.com/bitcoincashjs/bchaddr by Emilio Almansi
+		wp_enqueue_script( 'bchaddr', plugins_url('js/bchaddrjs-0.2.1.min.js', __FILE__), array('wc-checkout', 'jquery'), 1 );
+
+	}
+}
 
 /**
  * CryptoWoo HD Wallet add-on not installed notice
@@ -155,20 +174,18 @@ if ( cwbch_hd_enabled() ) {
 }
 
 /**
- * Bitcoin Cash font color for aw-cryptocoins
+ * Font color for aw-cryptocoins
  * see cryptowoo/assets/fonts/aw-cryptocoins/cryptocoins-colors.css
  */
-function cwbch_coin_icon_color() { ?>
+function cwbch_coin_icon_color() {
+	?>
     <style type="text/css">
-        i.cc.BCH:before, i.cc.BCH-alt:before {
-            content: "\e9a6";
-        }
-
-        i.cc.BCH, i.cc.BCH-alt {
+        i.cc.<?php echo esc_attr( 'BCH' ); ?>, i.cc.<?php echo esc_attr( 'BCH-alt' ); ?> {
             color: #70c659;
         }
     </style>
-<?php }
+	<?php
+}
 
 add_action( 'wp_head', 'cwbch_coin_icon_color' );
 
@@ -303,6 +320,8 @@ function cwbch_processing_config( $pc_conf, $currency, $options ) {
  *
  * @return string
  */
+//TODO: Save cash address instead of legacy
+
 function cwbch_link_to_address( $url, $address, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
 		$url = "https://cashexplorer.bitcoin.com/address/{$address}";
@@ -504,7 +523,7 @@ function cwbch_get_mpk_data_network( $mpk_data, $currency, $options ) {
  * @return array
  */
 function cwbch_force_update_exchange_rates( $results ) {
-	$results[ 'bch' ] = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCH', false, true );
+	$results[ 'bch' ] = CW_ExchangeRates::processing()->update_coin_fiat_rates( 'BCH', false, true );
 
 	return $results;
 }
@@ -518,7 +537,7 @@ function cwbch_force_update_exchange_rates( $results ) {
  * @return array
  */
 function cwbch_cron_update_exchange_data( $data, $options ) {
-	$bch = CW_ExchangeRates::update_altcoin_fiat_rates( 'BCH', $options );
+	$bch = CW_ExchangeRates::processing()->update_coin_fiat_rates( 'BCH', $options );
 
 	// Maybe log exchange rate updates
 	if ( (bool) $options[ 'logging' ][ 'rates' ] ) {
