@@ -10,7 +10,8 @@ if ( ! class_exists( CW_Exchange_Poloniex_BCH::class ) ) {
 	 * @category CryptoWoo
 	 * @package Exchange
 	 * @subpackage ExchangeBase
-	 * @author Name: Olav Småriset, Company Name: We Program IT
+	 * Author: We Program IT | legal company name: OS IT Programming AS | Company org nr: NO 921 074 077
+	 * Author URI: https://weprogram.it
 	 */
 	class CW_Exchange_Poloniex_BCH extends CW_Exchange_Poloniex {
 		/** Get the exchange rate pair (base/currency)

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * GitHub Plugin URI: Olsm/cryptowoo-bitcoin-cash-addon
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
- * Version: 1.3.2.1
+ * Version: 1.3.3
  * Author: We Program IT | legal company name: OS IT Programming AS | Company org nr: NO 921 074 077
  * Author URI: https://weprogram.it
  * License: GPLv2
@@ -169,15 +169,17 @@ if ( cwbch_hd_enabled() ) {
 	// Options page
 	add_action( 'plugins_loaded', 'cwbch_add_fields', 10 );
 
-	// Override Poloniex to have BCHABC instead of BCH as ticker
-	add_action( 'plugins_loaded', 'cwbch_override_exchange_poloniex', 10 );
+	// Override Poloniex and Binance to have BCHABC instead of BCH as ticker
+	add_action( 'plugins_loaded', 'cwbch_override_exchanges', 10 );
 }
 
 /**
  * Override Poloniex to have BCHABC instead of BCH as ticker
  */
-function cwbch_override_exchange_poloniex() {
-	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-poloniex.php';
+function cwbch_override_exchanges() {
+	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-poloniex-bch.php';
+	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-binance-bch.php';
+	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-bitfinex-bch.php';
 }
 
 /**
@@ -924,11 +926,18 @@ function cwbch_add_fields() {
 		'subtitle'          => sprintf( __( 'Choose the exchange you prefer to use to calculate the %sBitcoin Cash to Bitcoin exchange rate%s', 'cryptowoo' ), '<strong>', '</strong>.' ),
 		'desc'              => sprintf( __( 'Cross-calculated via BTC/%s', 'cryptowoo' ), $woocommerce_currency ),
 		'options'           => array(
+			'binance'    => 'Binance',
+			'coinbase'   => 'Coinbase',
 			'bittrex'    => 'Bittrex',
 			'poloniex'   => 'Poloniex',
-			'shapeshift' => 'ShapeShift'
+			'bitfinex'   => 'Bitfinex',
+			'bitstamp'   => 'Bitstamp',
+			'bitpay'     => 'BitPay',
+			'shapeshift' => 'ShapeShift',
+			'livecoin'   => 'Livecoin',
+			'okcoin'     => 'OKCoin.com',
 		),
-		'default'           => 'poloniex',
+		'default'           => 'binance',
 		'ajax_save'         => false, // Force page load when this changes
 		'validate_callback' => 'redux_validate_exchange_api',
 		'select2'           => array( 'allowClear' => false )
