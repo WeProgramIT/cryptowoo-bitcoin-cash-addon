@@ -52,7 +52,11 @@ function cryptowoo_bch_addon_activate() {
 		return;
 	} else {
 		include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-poloniex.php';
-    }
+  }
+
+	if( (defined('CWOO_VERSION' ) && version_compare(CWOO_VERSION, '0.22.0', '<'))  || (defined('HDWALLET_VER' ) && version_compare(HDWALLET_VER, '0.9.1', '<'))) {
+		deactivate_plugins( '/cryptowoo-bitcoin-cash-addon/cryptowoo-bitcoin-cash-addon.php', true );
+	}
 }
 
 register_activation_hook( __FILE__, 'cryptowoo_bch_addon_activate' );
