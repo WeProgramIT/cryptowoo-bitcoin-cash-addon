@@ -532,7 +532,7 @@ function cwbch_get_mpk_data_network( $mpk_data, $currency, $options ) {
  * @return array
  */
 function cwbch_force_update_exchange_rates( $results ) {
-	$results[ 'bch' ] = CW_ExchangeRates::processing()->update_coin_fiat_rates( 'BCH', false, true );
+	$results[ 'bch' ] = CW_ExchangeRates::processing()->update_coin_rates( 'BCH', false, true );
 
 	return $results;
 }
