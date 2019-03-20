@@ -170,7 +170,7 @@ if ( cwbch_hd_enabled() ) {
 	add_action( 'plugins_loaded', 'cwbch_add_fields', 10 );
 
 	// Override Poloniex and Binance to have BCHABC instead of BCH as ticker
-	add_action( 'plugins_loaded', 'cwbch_override_exchanges', 10 );
+	add_action( 'cw_include_all', 'cwbch_override_exchanges', 10 );
 }
 
 /**
