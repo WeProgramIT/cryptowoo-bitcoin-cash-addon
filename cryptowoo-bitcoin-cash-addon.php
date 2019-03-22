@@ -170,16 +170,29 @@ if ( cwbch_hd_enabled() ) {
 	add_action( 'plugins_loaded', 'cwbch_add_fields', 10 );
 
 	// Override Poloniex and Binance to have BCHABC instead of BCH as ticker
-	add_action( 'cw_include_all', 'cwbch_override_exchanges', 10 );
+	add_action( 'cw_exchange_class_name', 'cwbch_override_exchange_name', 10, 2 );
 }
 
 /**
- * Override Poloniex to have BCHABC instead of BCH as ticker
+ * Override exchanges for BCH (ticker names)
+ *
+ * @param $exchange_class_name
+ * @param $coin_type
+ *
+ * @return string
  */
-function cwbch_override_exchanges() {
-	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-poloniex-bch.php';
-	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-binance-bch.php';
-	include_once plugin_dir_path( __FILE__ ) . 'exchanges/class.exchange-bitfinex-bch.php';
+function cwbch_override_exchange_name( $exchange_class_name, $coin_type ) {
+	if ( 'BCH' === $coin_type && false !== strpos( $exchange_class_name, 'CW_Exchange_' ) ) {
+		$exchange_method    = substr( $exchange_class_name, strlen( 'CW_Exchange_' ) );
+		$override_exchanges = array( 'poloniex', 'bitfinex', 'binance' );
+
+		if ( in_array( $exchange_method, $override_exchanges ) ) {
+			$exchange_class_name = "CW_Exchange_{$exchange_method}_BCH";
+			class_exists( $exchange_class_name, false ) ?: require_once plugin_dir_path( __FILE__ ) . strtolower("exchanges/class-cw-exchange-$exchange_method-$coin_type.php");
+		}
+	}
+
+	return $exchange_class_name;
 }
 
 /**
