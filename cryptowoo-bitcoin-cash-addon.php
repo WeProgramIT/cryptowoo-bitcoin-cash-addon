@@ -352,7 +352,9 @@ function cwbch_link_to_address( $url, $address, $currency, $options ) {
 			if ( ! wp_http_validate_url( $url ) ) {
 				$url = '#';
 			}
-		}
+		} elseif ( $options[ 'preferred_block_explorer_bch' ] === 'blockchair' ) {
+			$url     = "https://blockchair.com/bitcoin-cash/address/{$address}";
+        }
 	}
 
 	return $url;
@@ -989,6 +991,7 @@ function cwbch_add_fields() {
 			'autoselect'   => __( 'Autoselect by processing API', 'cryptowoo' ),
 			'cashexplorer' => 'cashexplorer.bitcoin.com',
 			'blockdozer'   => 'blockdozer.com',
+			'blockchair' => 'blockchair.com',
 			'custom'       => __( 'Custom (enter URL below)' ),
 		),
 		'default'    => 'cashexplorer',
