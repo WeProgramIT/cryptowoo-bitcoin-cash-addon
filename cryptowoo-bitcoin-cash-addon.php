@@ -18,20 +18,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC tested up to: 3.2.6
  */
 
-define( 'CWBCH_VER', '1.4' );
+define( 'CWBCH_VER', '1.4.1' );
 define( 'CWBCH_FILE', __FILE__ );
-$cw_dir          = WP_PLUGIN_DIR . "/cryptowoo";
-$cw_license_path = "$cw_dir/am-license-menu.php";
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts_bch_addon' );
 
-// Load the plugin update library if it is not already loaded
-if ( ! class_exists( 'CWBCH_License_Menu' ) && file_exists( $cw_license_path ) ) {
-	require_once( $cw_license_path );
-
-	class CWBCH_License_Menu extends CWoo_License_Menu {};
-
-	CWBCH_License_Menu::instance( CWBCH_FILE, 'CryptoWoo Bitcoin Cash Add-on', CWBCH_VER, 'plugin', 'https://www.cryptowoo.com/' );
-}
+// Load the plugin update library.
+add_action( 'cryptowoo_api_manager_loaded', function () {
+	new CW_License_Menu( __FILE__, 3358, CWBCH_VER );
+} );
 
 /**
  * Plugin activation
