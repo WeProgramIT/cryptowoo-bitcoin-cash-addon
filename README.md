@@ -13,12 +13,15 @@ Accept payments in Bitcoin Cash in WooCommerce with CryptoWoo.
 3. Activate plugin.
 
 # Donate
-<img align="left" src="https://blockchain.info/qr?data=1H1CjSMwLjeeuuMbumdQCRoxAyAGKfi3Mc&size=150">  
+<img align="left" src="img/donate_bitcoincash_qr.png" width="200px" height="200px">
+<img align="right" src="img/donate_bitcoin_qr.png" width="200px" height="200px">
 
 Contribute to development of this plugin.
 
-**1H1CjSMwLjeeuuMbumdQCRoxAyAGKfi3Mc**
+**BCH: qzhchn3ly6lyumv5u8w0vf5zlg35l4qnk5pu72wedy**
 
-Send Bitcoin Cash or Bitcoin Core.
+**BTC: 1H1CjSMwLjeeuuMbumdQCRoxAyAGKfi3Mc**
+
+Send Bitcoin Cash or Bitcoin.
 
 Thanks for your support!
