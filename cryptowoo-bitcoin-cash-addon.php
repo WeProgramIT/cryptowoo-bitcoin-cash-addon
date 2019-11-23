@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC tested up to: 3.2.6
  */
 
-define( 'CWBCH_VER', '1.4.1' );
+define( 'CWBCH_VER', '1.4.2' );
 define( 'CWBCH_FILE', __FILE__ );
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts_bch_addon' );
 
@@ -343,7 +343,7 @@ function cwbch_processing_config( $pc_conf, $currency, $options ) {
 
 function cwbch_link_to_address( $url, $address, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
-		$url = "https://cashexplorer.bitcoin.com/address/{$address}";
+		$url = "https://explorer.bitcoin.com/api/bch/address/{$address}";
 		if ( $options[ 'preferred_block_explorer_bch' ] === 'custom' && isset( $options[ 'custom_block_explorer_bch' ] ) ) {
 			$url = preg_replace( '/{{ADDRESS}}/', $address, $options[ 'custom_block_explorer_bch' ] );
 			if ( ! wp_http_validate_url( $url ) ) {
@@ -371,7 +371,7 @@ function cwbch_link_to_address( $url, $address, $currency, $options ) {
 function cwbch_cw_update_tx_details( $batch_data, $batch_currency, $orders, $processing, $options ) {
 	if ( $batch_currency == "BCH" ) {
 		if ( $options[ 'processing_api_bch' ] == "cashexplorer" ) {
-			$options[ 'custom_api_bch' ] = "https://cashexplorer.bitcoin.com/api";
+			$options[ 'custom_api_bch' ] = "https://explorer.bitcoin.com/api/bch";
 		} else if ( $options[ 'processing_api_bch' ] == "blockdozer" ) {
 			$options[ 'custom_api_bch' ] = "http://blockdozer.com/insight-api/";
 		}
@@ -863,7 +863,7 @@ function cwbch_add_fields() {
 		'title'             => sprintf( __( '%s Processing API', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Choose the API provider you want to use to look up %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'options'           => array(
-			'cashexplorer' => 'cashexplorer.bitcoin.com',
+			'cashexplorer' => 'explorer.bitcoin.com',
 			'blockdozer'   => 'Blockdozer.com',
 			'custom'       => __( 'Custom (no testnet)', 'cryptowoo' ),
 			'disabled'     => __( 'Disabled', 'cryptowoo' ),
@@ -900,8 +900,8 @@ function cwbch_add_fields() {
 		'type'              => 'text',
 		'title'             => sprintf( __( '%s Insight API URL', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Connect to any %sInsight API%s instance.', 'cryptowoo' ), '<a href="https://github.com/bitpay/insight-api/" title="Insight API" target="_blank">', '</a>' ),
-		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttps://cashexplorer.bitcoin.com/api/txs?address=%sRoot URL: %shttps://cashexplorer.bitcoin.com/api/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
-		'placeholder'       => 'https://cashexplorer.bitcoin.com/api/',
+		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttps://explorer.bitcoin.com/api/bch/txs?address=%sRoot URL: %shttps://explorer.bitcoin.com/api/bch/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
+		'placeholder'       => 'https://explorer.bitcoin.com/api/bch/',
 		'required'          => array( 'processing_api_bch', 'equals', 'custom' ),
 		'validate_callback' => 'redux_validate_custom_api',
 		'ajax_save'         => false,
@@ -1003,7 +1003,7 @@ function cwbch_add_fields() {
 		'desc'       => '',
 		'options'    => array(
 			'autoselect'   => __( 'Autoselect by processing API', 'cryptowoo' ),
-			'cashexplorer' => 'cashexplorer.bitcoin.com',
+			'cashexplorer' => 'explorer.bitcoin.com',
 			'blockdozer'   => 'blockdozer.com',
 			'blockchair' => 'blockchair.com',
 			'custom'       => __( 'Custom (enter URL below)' ),
@@ -1031,7 +1031,7 @@ function cwbch_add_fields() {
 		'title'             => sprintf( __( 'Custom %s Block Explorer URL', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => __( 'Link to a block explorer of your choice.', 'cryptowoo' ),
 		'desc'              => sprintf( __( 'The URL to the page that displays the information for a single address.%sPlease add %s{{ADDRESS}}%s as placeholder for the cryptocurrency address in the URL.%s', 'cryptowoo' ), '<br><strong>', '<code>', '</code>', '</strong>' ),
-		'placeholder'       => 'https://cashexplorer.bitcoin.com/api/txs?address={$address}',
+		'placeholder'       => 'https://explorer.bitcoin.com/api/bch/txs?address={$address}',
 		'required'          => array( 'preferred_block_explorer_bch', '=', 'custom' ),
 		'validate_callback' => 'redux_validate_custom_blockexplorer',
 		'ajax_save'         => false,
