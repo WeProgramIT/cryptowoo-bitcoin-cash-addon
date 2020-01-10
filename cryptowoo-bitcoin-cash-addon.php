@@ -561,7 +561,7 @@ function cwbch_cron_update_exchange_data( $data, $options ) {
 	$bch = CW_ExchangeRates::processing()->update_coin_fiat_rates( 'BCH', $options );
 
 	// Maybe log exchange rate updates
-	if ( (bool) $options[ 'logging' ][ 'rates' ] ) {
+	if ( CW_AdminMain::logging_is_enabled( 'debug' ) ) {
 		if ( $bch[ 'status' ] === 'not updated' || strpos( $bch[ 'status' ], 'disabled' ) ) {
 			$data[ 'bch' ] = strpos( $bch[ 'status' ], 'disabled' ) ? $bch[ 'status' ] : $bch[ 'last_update' ];
 		} else {
