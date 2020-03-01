@@ -343,7 +343,7 @@ function cwbch_processing_config( $pc_conf, $currency, $options ) {
 
 function cwbch_link_to_address( $url, $address, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
-		$url = "https://explorer.bitcoin.com/api/bch/address/{$address}";
+		$url = "https://explorer.bitcoin.com/bch/address/{$address}";
 		if ( $options[ 'preferred_block_explorer_bch' ] === 'custom' && isset( $options[ 'custom_block_explorer_bch' ] ) ) {
 			$url = preg_replace( '/{{ADDRESS}}/', $address, $options[ 'custom_block_explorer_bch' ] );
 			if ( ! wp_http_validate_url( $url ) ) {
