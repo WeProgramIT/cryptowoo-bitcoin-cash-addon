@@ -968,7 +968,7 @@ function cwbch_add_fields() {
 			'livecoin'   => 'Livecoin',
 			'okcoin'     => 'OKCoin.com',
 		),
-		'default'           => 'binance',
+		'default'           => 'coingecko',
 		'ajax_save'         => false, // Force page load when this changes
 		'validate_callback' => 'redux_validate_exchange_api',
 		'select2'           => array( 'allowClear' => false )
