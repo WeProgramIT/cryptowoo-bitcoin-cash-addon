@@ -985,10 +985,10 @@ function cwbch_add_fields() {
 		'subtitle'      => sprintf( __( 'Extra multiplier to apply when calculating %s prices.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'          => '',
 		'default'       => 1,
-		'min'           => .01,
-		'step'          => .01,
+		'min'           => .001,
+		'step'          => .001,
 		'max'           => 2,
-		'resolution'    => 0.01,
+		'resolution'    => 0.001,
 		'validate'      => 'comma_numeric',
 		'display_value' => 'text'
 	) );
