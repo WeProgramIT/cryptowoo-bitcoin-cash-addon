@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * GitHub Plugin URI: Olsm/cryptowoo-bitcoin-cash-addon
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
- * Version: 1.4.3
+ * Version: 1.4.4
  * Author: We Program IT | legal company name: OS IT Programming AS | Company org nr: NO 921 074 077
  * Author URI: https://weprogram.it
  * License: GPLv2
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC tested up to: 3.2.6
  */
 
-define( 'CWBCH_VER', '1.4.3' );
+define( 'CWBCH_VER', '1.4.4' );
 define( 'CWBCH_FILE', __FILE__ );
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts_bch_addon' );
 
@@ -372,7 +372,7 @@ function cwbch_cw_update_tx_details( $batch_data, $batch_currency, $orders, $pro
 	if ( $batch_currency == "BCH" ) {
 		// Blockdozer is down so for now we use explorer.bitcoin.com api instead if blockdozer is still in CW options.
 		if ( 'cashexplorer' === $options['processing_api_bch'] || 'blockdozer' === $options['processing_api_bch'] ) {
-			$options['custom_api_bch'] = 'https://explorer.bitcoin.com/api/bch';
+			$options['custom_api_bch'] = 'https://explorer.api.bitcoin.com/bch/v1';
 		} /* else if ( $options[ 'processing_api_bch' ] == "blockdozer" ) {
 			$options[ 'custom_api_bch' ] = "http://blockdozer.com/insight-api/";
 		} */
@@ -901,8 +901,8 @@ function cwbch_add_fields() {
 		'type'              => 'text',
 		'title'             => sprintf( __( '%s Insight API URL', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Connect to any %sInsight API%s instance.', 'cryptowoo' ), '<a href="https://github.com/bitpay/insight-api/" title="Insight API" target="_blank">', '</a>' ),
-		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttps://explorer.bitcoin.com/api/bch/txs?address=%sRoot URL: %shttps://explorer.bitcoin.com/api/bch/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
-		'placeholder'       => 'https://explorer.bitcoin.com/api/bch/',
+		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttps://explorer.api.bitcoin.com/bch/v1/txs?address=%sRoot URL: %shttps://explorer.api.bitcoin.com/bch/v1/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
+		'placeholder'       => 'https://explorer.api.bitcoin.com/bch/v1/',
 		'required'          => array( 'processing_api_bch', 'equals', 'custom' ),
 		'validate_callback' => 'redux_validate_custom_api',
 		'ajax_save'         => false,
@@ -933,13 +933,13 @@ function cwbch_add_fields() {
 		'type'              => 'text',
 		'title'             => sprintf( __( 'cashexplorer Bitcoin Cash API Fallback', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Fallback to any %sInsight API%s instance in case the cashexplorer API fails. Retry cashexplorer upon beginning of the next hour. Leave empty to disable.', 'cryptowoo' ), '<a href="https://github.com/bitpay/insight-api/" title="Insight API" target="_blank">', '</a>' ),
-		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttps://explorer.bitcoin.com/api/bch/txs?address=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa%sRoot URL: %shttps://explorer.bitcoin.com/api/bch/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
-		'placeholder'       => 'https://explorer.bitcoin.com/api/bch/',
+		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttps://explorer.api.bitcoin.com/bch/v1/txs?address=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa%sRoot URL: %shttps://explorer.api.bitcoin.com/bch/v1/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
+		'placeholder'       => 'https://explorer.api.bitcoin.com/bch/v1/',
 		'required'          => array( 'processing_api_bch', 'equals', 'blockcypher' ),
 		'validate_callback' => 'redux_validate_custom_api',
 		'ajax_save'         => false,
 		'msg'               => __( 'Invalid BCH Insight API URL', 'cryptowoo' ),
-		'default'           => 'hhttps://explorer.bitcoin.com/api/bch/',
+		'default'           => 'https://explorer.api.bitcoin.com/bch/v1/',
 		'text_hint'         => array(
 			'title'   => 'Please Note:',
 			'content' => __( 'Make sure the root URL of the API has a trailing slash ( / ).', 'cryptowoo' ),
@@ -1033,7 +1033,7 @@ function cwbch_add_fields() {
 		'title'             => sprintf( __( 'Custom %s Block Explorer URL', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => __( 'Link to a block explorer of your choice.', 'cryptowoo' ),
 		'desc'              => sprintf( __( 'The URL to the page that displays the information for a single address.%sPlease add %s{{ADDRESS}}%s as placeholder for the cryptocurrency address in the URL.%s', 'cryptowoo' ), '<br><strong>', '<code>', '</code>', '</strong>' ),
-		'placeholder'       => 'https://explorer.bitcoin.com/api/bch/txs?address={$address}',
+		'placeholder'       => 'https://explorer.api.bitcoin.com/bch/v1/txs?address={$address}',
 		'required'          => array( 'preferred_block_explorer_bch', '=', 'custom' ),
 		'validate_callback' => 'redux_validate_custom_blockexplorer',
 		'ajax_save'         => false,
