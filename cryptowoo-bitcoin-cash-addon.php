@@ -921,6 +921,17 @@ function cwbch_add_fields_v4() {
 		'subtitle'          => sprintf( __( 'Use the API token from your %sBlockCypher%s account.', 'cryptowoo' ), '<strong><a href="https://accounts.blockcypher.com/" title="BlockCypher account bchboard" target="_blank">', '</a></strong>' ),
 		'validate_callback' => 'redux_validate_token'
 	) );
+	// Re-add CryptoID token field
+	Redux::set_field( 'cryptowoo_payments', array(
+		'section_id' => 'processing-api',
+		'id'         => 'cryptoid_api_key',
+		'type'       => 'text',
+		'ajax_save'  => false, // Force page load when this changes
+		'desc'       => sprintf(__('%sMore info%s', 'cryptowoo'), '<a href="https://chainz.cryptoid.info/api.dws" title="cryptoID API Docs" target="_blank">', '</a>'),
+		'title'      =>  __('cryptoID API Key (required)', 'cryptowoo'),
+		'subtitle'   => sprintf(__('Use the API token from your %sCryptoID%s account.', 'cryptowoo'), '<strong><a href="https://chainz.cryptoid.info/api.key.dws" title="Request cryptoID API Key" target="_blank">', '</a></strong>'),
+		//'validate_callback' => 'redux_validate_token',
+	) );
 
 	// API Resource control information
 	Redux::set_field( 'cryptowoo_payments', 'processing-api-resources', array(
@@ -1281,6 +1292,8 @@ function cwbch_add_fields() {
 
 	// Remove blockcypher token field
 	Redux::removeField( 'cryptowoo_payments', 'blockcypher_token', false );
+	// Remove CryptoID token field
+	Redux::removeField( 'cryptowoo_payments', 'cryptoid_api_key', false );
 
 	/*
 	 * Processing API
@@ -1352,6 +1365,17 @@ function cwbch_add_fields() {
 		'title'             => __( 'BlockCypher Token (optional)', 'cryptowoo' ),
 		'subtitle'          => sprintf( __( 'Use the API token from your %sBlockCypher%s account.', 'cryptowoo' ), '<strong><a href="https://accounts.blockcypher.com/" title="BlockCypher account bchboard" target="_blank">', '</a></strong>' ),
 		'validate_callback' => 'redux_validate_token'
+	) );
+	// Re-add CryptoID token field
+	Redux::setField( 'cryptowoo_payments', array(
+		'section_id' => 'processing-api',
+		'id'         => 'cryptoid_api_key',
+		'type'       => 'text',
+		'ajax_save'  => false, // Force page load when this changes
+		'desc'       => sprintf(__('%sMore info%s', 'cryptowoo'), '<a href="https://chainz.cryptoid.info/api.dws" title="cryptoID API Docs" target="_blank">', '</a>'),
+		'title'      =>  __('cryptoID API Key (required)', 'cryptowoo'),
+		'subtitle'   => sprintf(__('Use the API token from your %sCryptoID%s account.', 'cryptowoo'), '<strong><a href="https://chainz.cryptoid.info/api.key.dws" title="Request cryptoID API Key" target="_blank">', '</a></strong>'),
+		//'validate_callback' => 'redux_validate_token',
 	) );
 
 	// API Resource control information
