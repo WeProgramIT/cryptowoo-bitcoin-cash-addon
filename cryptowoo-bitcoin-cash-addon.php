@@ -300,7 +300,7 @@ function cwbch_wallet_config( $wallet_config, $currency, $options ) {
 			'threshold_key' => 'forwarding_threshold_bch'
 		);
 		$wallet_config[ 'hdwallet' ]           = CW_Validate::check_if_unset( $wallet_config[ 'mpk_key' ], $options, false );
-		$wallet_config[ 'coin_protocols' ][]   = 'bch';
+		$wallet_config[ 'coin_protocols' ][]   = 'bitcoincash';
 		$wallet_config[ 'forwarding_enabled' ] = false;
 	}
 
