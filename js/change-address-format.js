@@ -14,16 +14,16 @@ jQuery(document).ready(function ( $ ) {
         }
         if(CryptoWoo.currency == 'BCH' && bchaddr.isLegacyAddress(CryptoWoo.payment_address)){
             jQuery('#qrcode').empty();
-            var toCashAddress = bchaddr.toCashAddress(CryptoWoo.payment_address);
-            var cashAddressWithoutLabel = toCashAddress.replace(/bitcoincash:/g,'');
-            if(toCashAddress.indexOf("amount") == -1){
-                toCashAddress += '?amount=' + CryptoWoo.amount;
-            }
+            var currentAddress = jQuery("#payment-address").text();
+            var cashAddressWithoutLabel = bchaddr.toCashAddress(CryptoWoo.payment_address).replace(/bitcoincash:/g,'');
+            var cashAddressWithLabel = jQuery("#cw-qr-wrap a").attr("href").replace(currentAddress,cashAddressWithoutLabel);
 
             jQuery("#payment-address").text(cashAddressWithoutLabel);
+            jQuery(".cw-tooltip:nth-child(2)").attr("href", cashAddressWithLabel);
+            jQuery("#cw-qr-wrap a").attr("href", cashAddressWithLabel);
 
             new QRCode(document.getElementById("qrcode"), {
-                text: toCashAddress,
+                text: cashAddressWithLabel,
                 width: 250,
                 height: 250,
                 colorDark : "#000000",
@@ -54,36 +54,29 @@ function change_addr_BCH() {
     var isLegacy = bchaddr.isLegacyAddress(currentPaymentAddress);
     var isCashAddress = bchaddr.isCashAddress(currentPaymentAddress);
 
-    var addressData = currentPaymentAddress;
+    var addressWithoutLabel = currentPaymentAddress;
 
     if(isLegacy){
-        addressData = bchaddr.toCashAddress(currentPaymentAddress);
+        addressWithoutLabel = bchaddr.toCashAddress(currentPaymentAddress).replace(/bitcoincash:/g,'');
         addr_format_button.text("Change to legacy-address");
     }
     else if (isCashAddress){
-        addressData = bchaddr.toLegacyAddress(currentPaymentAddress);
+        addressWithoutLabel = bchaddr.toLegacyAddress(currentPaymentAddress).replace(/bitcoincash:/g,'');
         addr_format_button.text("Change to cash-address");
     }
-    sessionStorage.qr_payment_address = addressData;
-
-    var addressDataString = addressData;
-
-
-    if(addressData.indexOf("bitcoincash") == -1){
-        addressDataString = 'bitcoincash:' + addressData;
-    }
-    if(addressData.indexOf("amount") == -1){
-        addressDataString += '?amount=' + CryptoWoo.amount;
-    }
+    sessionStorage.qr_payment_address = addressWithoutLabel;
 
     //Update send address
-    var addressWithoutLabel = addressData.replace(/bitcoincash:/g,'');
+    var currentAddress = jQuery("#payment-address").text();
+    var addressWithLabel = jQuery("#cw-qr-wrap a").attr("href").replace(currentAddress,addressWithoutLabel);
 
     jQuery("#payment-address").text(addressWithoutLabel);
+    jQuery(".cw-tooltip:nth-child(2)").attr("href", addressWithLabel);
+    jQuery("#cw-qr-wrap a").attr("href", addressWithLabel);
 
     //Add qrcode back
     new QRCode(document.getElementById("qrcode"), {
-        text: addressDataString,
+        text: addressWithLabel,
         width: 250,
         height: 250,
         colorDark : "#000000",
