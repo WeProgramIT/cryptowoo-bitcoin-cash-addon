@@ -171,9 +171,6 @@ if ( cwbch_hd_enabled() ) {
 
 	// Override Poloniex and Binance to have BCHABC instead of BCH as ticker
 	add_action( 'cw_exchange_class_name', 'cwbch_override_exchange_name', 10, 2 );
-
-	// Add "please use legacy address" note to xpub setup
-	add_filter('cryptowoo_hd_first_address_comment', 'cwbch_hd_first_address_comment', 10, 2);
 }
 
 /**
@@ -719,23 +716,6 @@ function cwbch_override_insight_url( $insight, $endpoint, $currency, $options ) 
 	}
 
 	return $insight;
-}
-
-
-/**
- * Add legacy address comment to HD wallet xpub setup
- *
- * @param $notice
- * @param $currency_params
- *
- * @return string
- */
-function cwbch_hd_first_address_comment( $notice, $currency ) {
-	if ( 'BCH' === $currency ) {
-		$notice .= sprintf( __( '%1$sPlease enter %2$s addresses in the legacy format (starting with a "1").%3$s', 'cryptowoo' ), '<strong>', $currency, '</strong>' );
-	}
-
-	return $notice;
 }
 
 /**
