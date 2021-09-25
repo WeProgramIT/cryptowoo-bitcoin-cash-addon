@@ -922,7 +922,6 @@ function cwbch_add_fields_v4() {
 		'desc'       => '',
 		'options'    => array(
 			'autoselect' => __( 'Autoselect by processing API', 'cryptowoo' ),
-			'bitcoincom' => 'explorer.bitcoin.com',
 			'blockchair' => 'blockchair.com',
 			'custom'     => __( 'Custom (enter URL below)' ),
 		),
@@ -1219,7 +1218,6 @@ function cwbch_add_fields() {
 		'subtitle'          => sprintf( __( 'Choose the API provider you want to use to look up %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'options'           => array(
 			'cashexplorer' => 'explorer.bitcoin.com',
-			//'blockdozer'   => 'Blockdozer.com',
 			'custom'       => __( 'Custom (no testnet)', 'cryptowoo' ),
 			'disabled'     => __( 'Disabled', 'cryptowoo' ),
 		),
