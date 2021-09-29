@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
  * Version: 1.4.6
- * Author: We Program IT | legal company name: OS IT Programming AS | Company org nr: NO 921 074 077
- * Author URI: https://weprogram.it
+ * Author: CryptoWoo AS
+ * Author URI: https://cryptowoo.com
  * License: GPLv2
  * Text Domain: cryptowoo-bch-addon
  * Domain Path: /lang
