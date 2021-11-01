@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @category CryptoWoo
  * @package Exchange
  * @subpackage ExchangeBase
- * Author: We Program IT | legal company name: OS IT Programming AS | Company org nr: NO 921 074 077
- * Author URI: https://weprogram.it
+ * Author: CryptoWoo AS
+ * Author URI: https://cryptowoo.com
  */
 class CW_Exchange_Poloniex_BCH extends CW_Exchange_Poloniex {
 	/** Get the exchange rate pair (base/currency)

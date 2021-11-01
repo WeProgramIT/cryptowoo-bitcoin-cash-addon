@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Forked From: CryptoWoo/cryptowoo-dash-addon, Author: flxstn
  * Description: Accept BCH payments in WooCommerce. Requires CryptoWoo main plugin and CryptoWoo HD Wallet Add-on.
  * Version: 1.4.6
- * Author: We Program IT | legal company name: OS IT Programming AS | Company org nr: NO 921 074 077
- * Author URI: https://weprogram.it
+ * Author: CryptoWoo AS
+ * Author URI: https://cryptowoo.com
  * License: GPLv2
  * Text Domain: cryptowoo-bch-addon
  * Domain Path: /lang
@@ -147,14 +147,8 @@ if ( cwbch_hd_enabled() ) {
 	add_filter( 'cw_cron_update_exchange_data', 'cwbch_cron_update_exchange_data', 10, 2 );
 	add_filter( 'cw_get_bittrex_price_coin', 'cwbch_get_bittrex_price_coin', 10, 1 );
 
-	// Catch failing processing API (only if processing_fallback is enabled)
-	add_filter( 'cw_get_tx_api_config', 'cwbch_cw_get_tx_api_config', 10, 3 );
-
 	// Insight API URL
 	add_filter( 'cw_prepare_insight_api', 'cwbch_override_insight_url', 10, 4 );
-
-	// Add block explorer processing
-	add_filter( 'cw_update_tx_details', 'cwbch_cw_update_tx_details', 10, 5 );
 
 	// Wallet config
 	add_filter( 'wallet_config', 'cwbch_wallet_config', 10, 3 );
@@ -321,9 +315,6 @@ function cwbch_wallet_config( $wallet_config, $currency, $options ) {
  */
 function cwbch_processing_config( $pc_conf, $currency, $options ) {
 	if ( $currency === 'BCH' ) {
-		$pc_conf[ 'instant_send' ]       = isset( $options[ 'bch_instant_send' ] ) ? (bool) $options[ 'bch_instant_send' ] : false;
-		$pc_conf[ 'instant_send_depth' ] = 5; // TODO Maybe add option
-
 		// Maybe accept "raw" zeroconf
 		$pc_conf[ 'min_confidence' ] = isset( $options[ 'cryptowoo_bch_min_conf' ] ) && (int) $options[ 'cryptowoo_bch_min_conf' ] === 0 && isset( $options[ 'bch_raw_zeroconf' ] ) && (bool) $options[ 'bch_raw_zeroconf' ] ? 0 : 1;
 	}
@@ -358,38 +349,6 @@ function cwbch_link_to_address( $url, $address, $currency, $options ) {
 	}
 
 	return $url;
-}
-
-/**
- * Update BCH tx details with insight api
- *
- * @param $batch_data
- * @param $batch_currency
- * @param $orders
- * @param $processing
- * @param $options
- *
- * @return string
- */
-function cwbch_cw_update_tx_details( $batch_data, $batch_currency, $orders, $processing, $options ) {
-	if ( $batch_currency == "BCH" ) {
-		// Blockdozer is down so for now we use explorer.bitcoin.com api instead if blockdozer is still in CW options.
-		if ( 'cashexplorer' === $options['processing_api_bch'] || 'blockdozer' === $options['processing_api_bch'] ) {
-			$options['custom_api_bch'] = 'https://explorer.api.bitcoin.com/bch/v1';
-		} /* else if ( $options[ 'processing_api_bch' ] == "blockdozer" ) {
-			$options[ 'custom_api_bch' ] = "http://blockdozer.com/insight-api/";
-		} */
-
-		$batch = [];
-		foreach ( $orders as $order ) {
-			$batch[] = $order->address;
-		}
-
-		$batch_data[ $batch_currency ] = CW_Insight::insight_batch_tx_update( "BCH", $batch, $orders, $options );
-		usleep( 333333 ); // Max ~3 requests/second TODO remove when we have proper rate limiting
-	}
-
-	return $batch_data;
 }
 
 
@@ -674,30 +633,6 @@ function cwbch_filter_batch( $address_batch, $address ) {
 	return $address_batch;
 }
 
-
-/**
- * Fallback on failing API
- *
- * @param $api_config
- * @param $currency
- *
- * @return array
- */
-function cwbch_cw_get_tx_api_config( $api_config, $currency ) {
-	// ToDo: add Blockcypher
-	if ( $currency === 'BCH' ) {
-		if ( $api_config->tx_update_api === 'cashexplorer' || $api_config->tx_update_api === 'blockdozer' ) {
-			$api_config->tx_update_api   = 'insight';
-			$api_config->skip_this_round = false;
-		} else {
-			$api_config->tx_update_api   = 'cashexplorer';
-			$api_config->skip_this_round = false;
-		}
-	}
-
-	return $api_config;
-}
-
 /**
  * Override Insight API URL if no URL is found in the settings
  *
@@ -843,10 +778,9 @@ function cwbch_add_fields_v4() {
 		'title'             => sprintf( __( '%s Processing API', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'subtitle'          => sprintf( __( 'Choose the API provider you want to use to look up %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'options'           => array(
-			'cashexplorer' => 'explorer.bitcoin.com',
-			//'blockdozer'   => 'Blockdozer.com',
-			'custom'       => __( 'Custom (no testnet)', 'cryptowoo' ),
-			'disabled'     => __( 'Disabled', 'cryptowoo' ),
+			'bitcoincom' => 'Bitcoin.com (explorer.bitcoin.com)',
+			'custom'     => __( 'Custom (no testnet)', 'cryptowoo' ),
+			'disabled'   => __( 'Disabled', 'cryptowoo' ),
 		),
 		'desc'              => '',
 		'default'           => 'disabled',
@@ -987,13 +921,11 @@ function cwbch_add_fields_v4() {
 		'subtitle'   => sprintf( __( 'Choose the block explorer you want to use for links to the %s blockchain.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'desc'       => '',
 		'options'    => array(
-			'autoselect'   => __( 'Autoselect by processing API', 'cryptowoo' ),
-			'cashexplorer' => 'explorer.bitcoin.com',
-			//'blockdozer'   => 'blockdozer.com',
+			'autoselect' => __( 'Autoselect by processing API', 'cryptowoo' ),
 			'blockchair' => 'blockchair.com',
-			'custom'       => __( 'Custom (enter URL below)' ),
+			'custom'     => __( 'Custom (enter URL below)' ),
 		),
-		'default'    => 'cashexplorer',
+		'default'    => 'bitcoincom',
 		'select2'    => array( 'allowClear' => false )
 	) );
 
@@ -1286,7 +1218,6 @@ function cwbch_add_fields() {
 		'subtitle'          => sprintf( __( 'Choose the API provider you want to use to look up %s payments.', 'cryptowoo' ), 'Bitcoin Cash' ),
 		'options'           => array(
 			'cashexplorer' => 'explorer.bitcoin.com',
-			//'blockdozer'   => 'Blockdozer.com',
 			'custom'       => __( 'Custom (no testnet)', 'cryptowoo' ),
 			'disabled'     => __( 'Disabled', 'cryptowoo' ),
 		),
@@ -1363,8 +1294,8 @@ function cwbch_add_fields() {
 		'section_id'        => 'processing-api-resources',
 		'id'                => 'processing_fallback_url_bch',
 		'type'              => 'text',
-		'title'             => sprintf( __( 'cashexplorer Bitcoin Cash API Fallback', 'cryptowoo' ), 'Bitcoin Cash' ),
-		'subtitle'          => sprintf( __( 'Fallback to any %sInsight API%s instance in case the cashexplorer API fails. Retry cashexplorer upon beginning of the next hour. Leave empty to disable.', 'cryptowoo' ), '<a href="https://github.com/bitpay/insight-api/" title="Insight API" target="_blank">', '</a>' ),
+		'title'             => sprintf( __( 'Bitcoin.com Bitcoin Cash API Fallback', 'cryptowoo' ), 'Bitcoin Cash' ),
+		'subtitle'          => sprintf( __( 'Fallback to any %sInsight API%s instance in case the Bitcoin.com API fails. Retry Bitcoin.com upon beginning of the next hour. Leave empty to disable.', 'cryptowoo' ), '<a href="https://github.com/bitpay/insight-api/" title="Insight API" target="_blank">', '</a>' ),
 		'desc'              => sprintf( __( 'The root URL of the API instance:%sLink to address:%shttps://explorer.api.bitcoin.com/bch/v1/txs?address=1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa%sRoot URL: %shttps://explorer.api.bitcoin.com/bch/v1/%s', 'cryptowoo-bch-addon' ), '<p>', '<code>', '</code><br>', '<code>', '</code></p>' ),
 		'placeholder'       => 'https://explorer.api.bitcoin.com/bch/v1/',
 		'required'          => array( 'processing_api_bch', 'equals', 'blockcypher' ),
